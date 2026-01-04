@@ -1,7 +1,7 @@
 # Settings Flow - Template Editor Validation
 # Tags: settings
 
-appId: com.dotlife.app
+appId: app.antran.dotlife
 name: Settings - Template Editor
 
 ---

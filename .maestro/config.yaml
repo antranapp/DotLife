@@ -1,7 +1,7 @@
 # Maestro Configuration for DotLife
 # https://maestro.mobile.dev/
 
-appId: com.dotlife.app
+appId: app.antran.dotlife
 name: DotLife Tests
 
 # iOS 17+ simulator target

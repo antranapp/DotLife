@@ -7,7 +7,7 @@ let project = Project(
             name: "DotLifeApp",
             destinations: .iOS,
             product: .app,
-            bundleId: "com.dotlife.app",
+            bundleId: "app.antran.dotlife",
             deploymentTargets: .iOS("17.0"),
             infoPlist: .file(path: "DotLifeApp/SupportingFiles/Info.plist"),
             sources: ["DotLifeApp/Sources/**"],

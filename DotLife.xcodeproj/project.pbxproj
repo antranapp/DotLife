@@ -201,7 +201,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.dotlife.app;
+				PRODUCT_BUNDLE_IDENTIFIER = app.antran.dotlife;
 				PRODUCT_NAME = DotLifeApp;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -284,7 +284,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.dotlife.app;
+				PRODUCT_BUNDLE_IDENTIFIER = app.antran.dotlife;
 				PRODUCT_NAME = DotLifeApp;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;

@@ -1,7 +1,7 @@
 # Smoke test - verify app launches and default state
 # Tags: smoke
 
-appId: com.dotlife.app
+appId: app.antran.dotlife
 name: Smoke Test - App Launch
 
 ---
