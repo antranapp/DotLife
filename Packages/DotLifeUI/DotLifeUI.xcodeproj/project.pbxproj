@@ -9,6 +9,15 @@
 /* Begin PBXBuildFile section */
 		1314598302FA4077521E58A7 /* DotLifeUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE8204B2D6352502DDB0B40 /* DotLifeUI.swift */; };
 		36EF024E706D8E6662443275 /* DotLifeDomain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBA89AC6916182673B6D7564 /* DotLifeDomain.framework */; };
+		3D23AC1736D5D3FF5A0B7DAF /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B985233E513CC5B3D307636F /* DetailView.swift */; };
+		427C5838A910DF2819EF90F9 /* WeekGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCB4332EC3BF3480D68C190 /* WeekGridView.swift */; };
+		637BD15371B0619082669F51 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5868AEDB6D2AEC55464DAA /* SettingsView.swift */; };
+		88E7905919DE7D7BAACC3BC0 /* VisualizeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0949D17A3CCB5BFA4A71FF3 /* VisualizeViewModel.swift */; };
+		8B77CD66428F4F1A4DBA03CE /* ZoomController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBB5284ED6D2601D42D8E5E /* ZoomController.swift */; };
+		8FD17A2CB738B790CA1CB3F0 /* TodayGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F8309F9F580E3D8264F78B /* TodayGridView.swift */; };
+		96AE4256A1F7FEF938AAD3DD /* CaptureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEE9CB4A391B74EA48C169 /* CaptureViewModel.swift */; };
+		DCA25C8A1BE3C7D8EA2E6227 /* DotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96D15513C0131D75EC0B4C8 /* DotView.swift */; };
+		F6E32289503BE1CFD4480506 /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E988E852B896AD7F54F58D /* DetailViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,10 +34,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		01E988E852B896AD7F54F58D /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
 		0BE8204B2D6352502DDB0B40 /* DotLifeUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotLifeUI.swift; sourceTree = "<group>"; };
 		19500B30A3FFE100B52F25C2 /* DotLifeUI-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "DotLifeUI-Info.plist"; sourceTree = "<group>"; };
+		4FCB4332EC3BF3480D68C190 /* WeekGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekGridView.swift; sourceTree = "<group>"; };
+		52F8309F9F580E3D8264F78B /* TodayGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayGridView.swift; sourceTree = "<group>"; };
+		5BBB5284ED6D2601D42D8E5E /* ZoomController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomController.swift; sourceTree = "<group>"; };
+		ADBEE9CB4A391B74EA48C169 /* CaptureViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureViewModel.swift; sourceTree = "<group>"; };
+		AF5868AEDB6D2AEC55464DAA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B96D15513C0131D75EC0B4C8 /* DotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotView.swift; sourceTree = "<group>"; };
+		B985233E513CC5B3D307636F /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		BA03703E899B1A97E09BFA88 /* DotLifeUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBA89AC6916182673B6D7564 /* DotLifeDomain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeDomain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0949D17A3CCB5BFA4A71FF3 /* VisualizeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualizeViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,7 +72,16 @@
 		3756C43104CF583B2E97FD8D /* DotLifeUI */ = {
 			isa = PBXGroup;
 			children = (
+				ADBEE9CB4A391B74EA48C169 /* CaptureViewModel.swift */,
+				B985233E513CC5B3D307636F /* DetailView.swift */,
+				01E988E852B896AD7F54F58D /* DetailViewModel.swift */,
 				0BE8204B2D6352502DDB0B40 /* DotLifeUI.swift */,
+				B96D15513C0131D75EC0B4C8 /* DotView.swift */,
+				AF5868AEDB6D2AEC55464DAA /* SettingsView.swift */,
+				52F8309F9F580E3D8264F78B /* TodayGridView.swift */,
+				E0949D17A3CCB5BFA4A71FF3 /* VisualizeViewModel.swift */,
+				4FCB4332EC3BF3480D68C190 /* WeekGridView.swift */,
+				5BBB5284ED6D2601D42D8E5E /* ZoomController.swift */,
 			);
 			path = DotLifeUI;
 			sourceTree = "<group>";
@@ -168,7 +195,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96AE4256A1F7FEF938AAD3DD /* CaptureViewModel.swift in Sources */,
+				3D23AC1736D5D3FF5A0B7DAF /* DetailView.swift in Sources */,
+				F6E32289503BE1CFD4480506 /* DetailViewModel.swift in Sources */,
 				1314598302FA4077521E58A7 /* DotLifeUI.swift in Sources */,
+				DCA25C8A1BE3C7D8EA2E6227 /* DotView.swift in Sources */,
+				637BD15371B0619082669F51 /* SettingsView.swift in Sources */,
+				8FD17A2CB738B790CA1CB3F0 /* TodayGridView.swift in Sources */,
+				88E7905919DE7D7BAACC3BC0 /* VisualizeViewModel.swift in Sources */,
+				427C5838A910DF2819EF90F9 /* WeekGridView.swift in Sources */,
+				8B77CD66428F4F1A4DBA03CE /* ZoomController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

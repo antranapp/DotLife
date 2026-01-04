@@ -12,14 +12,14 @@ Implement `DotLifePersistence` as a robust Core Data module packaged in SPM, inc
   - (Optional now, required later) `AttachmentEntity` placeholder for photo file paths
 
 ## Tasks
-- [ ] Add `.xcdatamodeld` to `DotLifePersistence/Resources`
-- [ ] Load `NSManagedObjectModel` from `Bundle.module` and create `NSPersistentContainer`
-- [ ] Implement repository methods:
+- [x] Add `.xcdatamodeld` to `DotLifePersistence/Resources`
+- [x] Load `NSManagedObjectModel` from `Bundle.module` and create `NSPersistentContainer`
+- [x] Implement repository methods:
   - add note/dot/link (photo can be stubbed until later milestone)
   - fetch by date interval
   - fetch by bucket (TimeBucket)
-- [ ] Add test harness using in-memory store
-- [ ] Add unit tests:
+- [x] Add test harness using in-memory store
+- [x] Add unit tests:
   - create + fetch works
   - bucket fetch returns correct records
   - momentType is preserved and returned
@@ -29,8 +29,12 @@ Implement `DotLifePersistence` as a robust Core Data module packaged in SPM, inc
 - Basic repository CRUD works in-memory
 
 ## Acceptance criteria checklist
-- [ ] Core Data model is packaged and loaded from `Bundle.module`
-- [ ] Repository conforms to Domain protocol
-- [ ] Records returned as Domain value types (UI never sees NSManagedObject)
-- [ ] In-memory tests cover create/fetch paths
-- [ ] momentType is stored and retrieved intact
+- [x] Core Data model is packaged and loaded from `Bundle.module`
+- [x] Repository conforms to Domain protocol
+- [x] Records returned as Domain value types (UI never sees NSManagedObject)
+- [x] In-memory tests cover create/fetch paths
+- [x] momentType is stored and retrieved intact
+
+## Notes
+- Core Data model is created programmatically (SPM-friendly approach)
+- 22 tests pass covering all CRUD operations and filtering

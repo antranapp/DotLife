@@ -7,8 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F7104C0A94E791A1D692BE4 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20B39091B787F29A648C6932 /* CoreDataModel.swift */; };
 		71F74B10C652F3DCDA17CD98 /* DotLifeDomain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25DC2288EE4E8F0B2D37D41E /* DotLifeDomain.framework */; };
 		9F8CC738622051BC581449E1 /* DotLifePersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B15CA9E1A13CE3E52646F66 /* DotLifePersistence.swift */; };
+		A4D1FC0DFE2A9B40C024FBA1 /* ExperienceEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF89F6E2ADEC586740B23ADE /* ExperienceEntity.swift */; };
+		C47C1877B506F1A6B6C4FF90 /* PhotoStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292519BC11E2C42E776D4548 /* PhotoStorageService.swift */; };
+		C8BBF8A673FF6CEE3E0EEB44 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A27ABC4E4D7E1091C907457 /* CoreDataStack.swift */; };
+		D590171F9DAAF3E30C250E13 /* AttachmentEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF0175BBF5421609FE51BF4 /* AttachmentEntity.swift */; };
+		F8FE47CD46690733336D8F85 /* CoreDataExperienceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AF1417FA716112987DF11F /* CoreDataExperienceRepository.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,9 +31,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		07AF1417FA716112987DF11F /* CoreDataExperienceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataExperienceRepository.swift; sourceTree = "<group>"; };
+		1A27ABC4E4D7E1091C907457 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		1B15CA9E1A13CE3E52646F66 /* DotLifePersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotLifePersistence.swift; sourceTree = "<group>"; };
+		20B39091B787F29A648C6932 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
 		25DC2288EE4E8F0B2D37D41E /* DotLifeDomain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeDomain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		292519BC11E2C42E776D4548 /* PhotoStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoStorageService.swift; sourceTree = "<group>"; };
+		AF89F6E2ADEC586740B23ADE /* ExperienceEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceEntity.swift; sourceTree = "<group>"; };
 		B21CC6E56313ACBDFB8BAF45 /* DotLifePersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifePersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DDF0175BBF5421609FE51BF4 /* AttachmentEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentEntity.swift; sourceTree = "<group>"; };
 		EFFD8297CAE9DE516B8278F7 /* DotLifePersistence-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "DotLifePersistence-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -54,7 +66,13 @@
 		40E7451E7AAB4E1093600177 /* DotLifePersistence */ = {
 			isa = PBXGroup;
 			children = (
+				DDF0175BBF5421609FE51BF4 /* AttachmentEntity.swift */,
+				07AF1417FA716112987DF11F /* CoreDataExperienceRepository.swift */,
+				20B39091B787F29A648C6932 /* CoreDataModel.swift */,
+				1A27ABC4E4D7E1091C907457 /* CoreDataStack.swift */,
 				1B15CA9E1A13CE3E52646F66 /* DotLifePersistence.swift */,
+				AF89F6E2ADEC586740B23ADE /* ExperienceEntity.swift */,
+				292519BC11E2C42E776D4548 /* PhotoStorageService.swift */,
 			);
 			path = DotLifePersistence;
 			sourceTree = "<group>";
@@ -168,7 +186,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D590171F9DAAF3E30C250E13 /* AttachmentEntity.swift in Sources */,
+				F8FE47CD46690733336D8F85 /* CoreDataExperienceRepository.swift in Sources */,
+				1F7104C0A94E791A1D692BE4 /* CoreDataModel.swift in Sources */,
+				C8BBF8A673FF6CEE3E0EEB44 /* CoreDataStack.swift in Sources */,
 				9F8CC738622051BC581449E1 /* DotLifePersistence.swift in Sources */,
+				A4D1FC0DFE2A9B40C024FBA1 /* ExperienceEntity.swift in Sources */,
+				C47C1877B506F1A6B6C4FF90 /* PhotoStorageService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,19 +15,25 @@ Implement the **UIKit gesture shell** with:
   - SwiftUI hosting cells/VCs
 
 ## Tasks
-- [ ] Implement `RootHorizontalPagerController` with paging enabled
-- [ ] Implement `VisualizeVerticalPagerController` with paging enabled
-- [ ] Implement DirectionLock (threshold + ratio)
-- [ ] Ensure “swipe anywhere” works (not edge-only)
-- [ ] Verify tap gestures still pass through to SwiftUI content
+- [x] Implement `RootHorizontalPagerController` with paging enabled
+- [x] Implement `VisualizeVerticalPagerController` with paging enabled
+- [x] Implement DirectionLock (threshold + ratio)
+- [x] Ensure "swipe anywhere" works (not edge-only)
+- [x] Verify tap gestures still pass through to SwiftUI content
 
 ## Verifiable output
 - In app, user can swipe horizontally anywhere to switch pages
 - On Visualize page, user can swipe vertically anywhere to switch between Today/Week placeholder views
 
 ## Acceptance criteria checklist
-- [ ] Horizontal swipe anywhere switches pages reliably
-- [ ] Vertical swipe switches Today/Week only when on Visualize page
-- [ ] Diagonal swipes do not trigger both axes
-- [ ] Tap on SwiftUI controls still works (not swallowed by pagers)
-- [ ] No persistence code imported into DotLifeShell
+- [x] Horizontal swipe anywhere switches pages reliably
+- [x] Vertical swipe switches Today/Week only when on Visualize page
+- [x] Diagonal swipes do not trigger both axes (direction lock with 12pt threshold and 1.2x ratio)
+- [x] Tap on SwiftUI controls still works (not swallowed by pagers)
+- [x] No persistence code imported into DotLifeShell
+
+## Implementation Notes
+- HorizontalPagerController uses UIScrollView with isPagingEnabled
+- VerticalPagerController nested inside Visualize page
+- DirectionLock class manages axis locking with configurable thresholds
+- SwiftUI views hosted via UIHostingController

@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "DotLifePersistence",
-    platforms: [.iOS(.v17)],
+    platforms: [.iOS(.v17), .macOS(.v14)],
     products: [
         .library(
             name: "DotLifePersistence",
@@ -16,7 +16,10 @@ let package = Package(
     targets: [
         .target(
             name: "DotLifePersistence",
-            dependencies: ["DotLifeDomain"]
+            dependencies: ["DotLifeDomain"],
+            resources: [
+                .process("Resources")
+            ]
         ),
         .testTarget(
             name: "DotLifePersistenceTests",

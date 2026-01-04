@@ -1,0 +1,104 @@
+# Visualize Flow - Horizontal and Vertical Paging
+# Tags: visualize
+
+appId: com.dotlife.app
+name: Visualize - Paging Navigation
+
+---
+- launchApp:
+    clearState: true
+
+# Wait for app to load
+- extendedWaitUntil:
+    visible: "What are you appreciating?"
+    timeout: 10000
+
+# Dismiss keyboard - tap on the blue checkmark button (bottom right, below keyboard keys)
+# Based on screenshot: keyboard ends around 92% from top, checkmark is at ~88% y
+- tapOn:
+    point: 80%, 88%
+
+# Wait for keyboard to dismiss
+- waitForAnimationToEnd
+
+# Take screenshot to verify keyboard dismissed
+- takeScreenshot: paging_00_keyboard_dismissed
+
+# Verify on Capture screen (placeholder should be visible again)
+- assertVisible: "What are you appreciating?"
+- takeScreenshot: paging_01_capture
+
+# Swipe from edge to edge to navigate to Visualize
+# Use edge swipe which might trigger iOS page navigation
+- swipe:
+    start: 99%, 50%
+    end: 1%, 50%
+    duration: 800
+
+# Wait for animation to complete
+- waitForAnimationToEnd
+
+# VERIFY DOT MATRIX IS DISPLAYED:
+# 1. Check for the "Swipe down for This Week" hint (confirms Today grid is visible)
+- extendedWaitUntil:
+    visible: "Swipe down for This Week"
+    timeout: 5000
+- assertVisible: "Swipe down for This Week"
+
+# 2. Check for scale indicator "Hours" (confirms grid is in hours mode)
+- assertVisible: "Hours"
+
+# 3. Check for hour labels in the grid (confirms dot matrix with labels is rendered)
+- assertVisible: "12am"
+
+# Take screenshot of Visualize with dot matrix
+- takeScreenshot: paging_02_visualize_dot_matrix
+
+# Swipe down to Week view (use upper area)
+- swipe:
+    start: 50%, 30%
+    end: 50%, 70%
+    duration: 400
+
+# Wait for animation
+- waitForAnimationToEnd
+
+# Verify Week view is displayed
+- extendedWaitUntil:
+    visible: "Swipe up for Today"
+    timeout: 5000
+- assertVisible: "Swipe up for Today"
+
+# Take screenshot of Week view
+- takeScreenshot: paging_03_week_view
+
+# Swipe up to go back to Today
+- swipe:
+    start: 50%, 70%
+    end: 50%, 30%
+    duration: 400
+
+# Wait for animation
+- waitForAnimationToEnd
+
+# Verify back on Today view
+- extendedWaitUntil:
+    visible: "Swipe down for This Week"
+    timeout: 5000
+
+# Swipe right to go back to Capture
+- swipe:
+    start: 10%, 30%
+    end: 90%, 30%
+    duration: 400
+
+# Wait for animation
+- waitForAnimationToEnd
+
+# Should be back on Capture - verify text field is visible
+- extendedWaitUntil:
+    visible: "What are you appreciating?"
+    timeout: 5000
+- assertVisible: "What are you appreciating?"
+
+- takeScreenshot: paging_04_back_to_capture

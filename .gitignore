@@ -25,3 +25,8 @@ Tuist/.tuist-bin/
 .DS_Store
 .vscode/
 .idea/
+
+
+build/
+DerivedData/
+.derivedData/

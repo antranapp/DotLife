@@ -1,0 +1,31 @@
+# Capture Flow - Add Note Experience
+# Tags: capture
+
+appId: com.dotlife.app
+name: Capture - Add Note
+
+---
+- launchApp
+
+# Wait for app to fully load
+- extendedWaitUntil:
+    visible: "What are you appreciating?"
+    timeout: 10000
+
+# Type in the text field
+- tapOn: "What are you appreciating?"
+- inputText: "Beautiful sunset today"
+
+# Submit via return key
+- pressKey: Enter
+
+# Wait for save to complete
+- waitForAnimationToEnd
+
+# Verify text field was cleared (placeholder reappears after save)
+- extendedWaitUntil:
+    visible: "What are you appreciating?"
+    timeout: 5000
+
+# Take screenshot to verify save completed
+- takeScreenshot: capture_note_saved

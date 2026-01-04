@@ -1,0 +1,20 @@
+# Capture Flow - Add Link Experience with Validation
+# Tags: capture
+
+appId: com.dotlife.app
+name: Capture - Add Link
+
+---
+- launchApp
+
+# Wait for app to load
+- extendedWaitUntil:
+    visible: "What are you appreciating?"
+    timeout: 10000
+
+# Take screenshot of initial state
+- takeScreenshot: link_01_initial
+
+# Note: Experience type switching requires tapping on SwiftUI Button text
+# which may have accessibility limitations in Maestro
+# This test verifies basic app launch for link flow

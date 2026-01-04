@@ -5,7 +5,7 @@ Implement the full Detail experience:
 - Full-screen presentation
 - Vertical list of experiences (newest-first)
 - **momentType label visible by default** per row
-- “Add an experience” CTA from detail
+- "Add an experience" CTA from detail
 
 ## Scope
 - `ExperienceDetailView`
@@ -14,10 +14,10 @@ Implement the full Detail experience:
 - Add CTA opens Capture flow (or a lightweight add sheet) and returns to detail
 
 ## Tasks
-- [ ] Implement bucket-based fetch and bind to detail list
-- [ ] Implement row rendering for note/link/dot (photo can come later)
-- [ ] Show momentType label (tiny mono) in each row by default
-- [ ] Add CTA to create new experience and return to detail
+- [x] Implement bucket-based fetch and bind to detail list
+- [x] Implement row rendering for note/link/dot (photo can come later)
+- [x] Show momentType label (tiny mono) in each row by default
+- [x] Add CTA to create new experience and return to detail
 
 ## Verifiable output
 - Tap dot → full-screen detail shows correct items
@@ -25,8 +25,14 @@ Implement the full Detail experience:
 - Add from detail creates new item and list updates
 
 ## Acceptance criteria checklist
-- [ ] Detail is full-screen and can be dismissed
-- [ ] Items ordered newest-first
-- [ ] Each item shows momentType label by default
-- [ ] Add CTA adds a new experience with correct timestamp and chosen momentType
-- [ ] List refreshes after add
+- [x] Detail is full-screen and can be dismissed
+- [x] Items ordered newest-first
+- [x] Each item shows momentType label by default
+- [x] Add CTA adds a new experience with correct timestamp and chosen momentType
+- [x] List refreshes after add
+
+## Implementation Notes
+- DetailViewModel fetches experiences for the selected bucket
+- DetailView uses fullScreenCover presentation
+- ExperienceRow shows icon, content, momentType label, and timestamp
+- Add sheet allows adding dots or notes with moment type selection

@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		31DEEE905E4F2194B6B9F499 /* ExperienceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F824F6924962D3E8E031 /* ExperienceRepository.swift */; };
+		6996900E38FC128B23930275 /* TimeBucket.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0779B294C3FE521C74C0C4D /* TimeBucket.swift */; };
 		87821E2690D064AF6E84D4CC /* DotLifeDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD20F014FD029B5A50C88ED /* DotLifeDomain.swift */; };
+		AB206A9B87B7B0571CB08ADF /* TimeBucketingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556838D20BD8909BE380EA0A /* TimeBucketingService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,8 +28,11 @@
 
 /* Begin PBXFileReference section */
 		1DD20F014FD029B5A50C88ED /* DotLifeDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotLifeDomain.swift; sourceTree = "<group>"; };
+		556838D20BD8909BE380EA0A /* TimeBucketingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBucketingService.swift; sourceTree = "<group>"; };
 		C5349574F0E13F60EF7D1255 /* DotLifeDomain-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "DotLifeDomain-Info.plist"; sourceTree = "<group>"; };
+		CBB8F824F6924962D3E8E031 /* ExperienceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceRepository.swift; sourceTree = "<group>"; };
 		D5998562518CDA3C1AA81876 /* DotLifeDomain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeDomain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0779B294C3FE521C74C0C4D /* TimeBucket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBucket.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +90,9 @@
 			isa = PBXGroup;
 			children = (
 				1DD20F014FD029B5A50C88ED /* DotLifeDomain.swift */,
+				CBB8F824F6924962D3E8E031 /* ExperienceRepository.swift */,
+				E0779B294C3FE521C74C0C4D /* TimeBucket.swift */,
+				556838D20BD8909BE380EA0A /* TimeBucketingService.swift */,
 			);
 			path = DotLifeDomain;
 			sourceTree = "<group>";
@@ -165,6 +174,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				87821E2690D064AF6E84D4CC /* DotLifeDomain.swift in Sources */,
+				31DEEE905E4F2194B6B9F499 /* ExperienceRepository.swift in Sources */,
+				6996900E38FC128B23930275 /* TimeBucket.swift in Sources */,
+				AB206A9B87B7B0571CB08ADF /* TimeBucketingService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

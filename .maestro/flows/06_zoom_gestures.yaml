@@ -1,0 +1,27 @@
+# Zoom Flow - Pinch and Double-tap Zoom
+# Tags: visualize, zoom
+
+appId: com.dotlife.app
+name: Visualize - Zoom Gestures
+
+---
+- launchApp
+
+# Wait for app to load
+- extendedWaitUntil:
+    visible: "What are you appreciating?"
+    timeout: 10000
+
+# Navigate to Visualize
+- swipe:
+    direction: LEFT
+    duration: 500
+
+# Wait for animation
+- waitForAnimationToEnd
+
+# Take screenshot of Visualize screen
+- takeScreenshot: zoom_01_visualize
+
+# Note: Double-tap zoom and pinch gestures have limited support in Maestro
+# Full zoom testing requires manual verification

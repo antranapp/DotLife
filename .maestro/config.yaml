@@ -1,0 +1,19 @@
+# Maestro Configuration for DotLife
+# https://maestro.mobile.dev/
+
+appId: com.dotlife.app
+name: DotLife Tests
+
+# iOS 17+ simulator target
+# Default: iPhone 15 Pro simulator
+# Override with: maestro test --device "iPhone 16"
+
+# Environment variables (if needed)
+env: {}
+
+# Tags for organizing flows
+tags:
+  - capture
+  - visualize
+  - settings
+  - smoke

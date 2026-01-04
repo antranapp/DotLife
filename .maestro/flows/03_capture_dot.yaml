@@ -1,0 +1,20 @@
+# Capture Flow - Add Dot Experience
+# Tags: capture
+
+appId: com.dotlife.app
+name: Capture - Add Dot
+
+---
+- launchApp
+
+# Wait for app to load
+- extendedWaitUntil:
+    visible: "What are you appreciating?"
+    timeout: 10000
+
+# Take screenshot
+- takeScreenshot: dot_01_initial
+
+# Note: Experience type switching via tappable text requires
+# SwiftUI accessibility improvements
+# This test verifies app launch for dot flow

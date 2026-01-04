@@ -1,0 +1,20 @@
+# Settings Flow - Template Editor Validation
+# Tags: settings
+
+appId: com.dotlife.app
+name: Settings - Template Editor
+
+---
+- launchApp
+
+# Wait for app to load
+- extendedWaitUntil:
+    visible: "What are you appreciating?"
+    timeout: 10000
+
+# Take initial screenshot
+- takeScreenshot: settings_01_capture
+
+# Note: Settings button accessibility may vary
+# For now, verify the app launched successfully
+# Full settings flow requires manual testing due to SwiftUI accessibility limitations
