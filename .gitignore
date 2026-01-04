@@ -1,0 +1,27 @@
+# Xcode
+DerivedData/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+*.xcuserdatad/
+xcuserdata/
+*.moved-aside
+
+# SwiftPM
+.build/
+.swiftpm/
+Package.resolved
+
+# Tuist
+Tuist/.build/
+Tuist/.tuist-cache/
+Tuist/.tuist-bin/
+
+# App artifacts
+*.ipa
+*.dSYM*
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
