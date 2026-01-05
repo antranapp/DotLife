@@ -73,20 +73,20 @@ public final class VerticalPagerController: UIViewController {
 
         scrollView.addSubview(contentView)
 
+        // Use contentLayoutGuide for scroll content size calculation
+        // and frameLayoutGuide for sizing relative to visible area
         NSLayoutConstraint.activate([
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            // Width must equal scroll view width (no horizontal scrolling)
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            // Height is 2x scroll view height (2 pages)
-            contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor, multiplier: 2)
+            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            // Width must equal scroll view visible width (no horizontal scrolling)
+            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+            // Height is 2x scroll view visible height (2 pages)
+            contentView.heightAnchor.constraint(equalTo: scrollView.frameLayoutGuide.heightAnchor, multiplier: 2)
         ])
 
         scrollView.delegate = self
-        if let lock = directionLock {
-            scrollView.panGestureRecognizer.delegate = lock
-        }
         scrollView.panGestureRecognizer.addTarget(self, action: #selector(handlePan(_:)))
     }
 
@@ -118,7 +118,7 @@ public final class VerticalPagerController: UIViewController {
             hostingController.view.topAnchor.constraint(equalTo: contentView.topAnchor),
             hostingController.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             hostingController.view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            hostingController.view.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
+            hostingController.view.heightAnchor.constraint(equalTo: scrollView.frameLayoutGuide.heightAnchor)
         ])
 
         hostingController.didMove(toParent: self)
@@ -144,7 +144,7 @@ public final class VerticalPagerController: UIViewController {
             hostingController.view.topAnchor.constraint(equalTo: contentView.centerYAnchor),
             hostingController.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             hostingController.view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            hostingController.view.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
+            hostingController.view.heightAnchor.constraint(equalTo: scrollView.frameLayoutGuide.heightAnchor)
         ])
 
         hostingController.didMove(toParent: self)
@@ -192,6 +192,7 @@ extension VerticalPagerController: UIScrollViewDelegate {
         directionLock?.enableAllScrolling()
     }
 }
+
 
 // MARK: - Placeholder Views
 

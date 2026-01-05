@@ -27,7 +27,7 @@ public final class DirectionLock: NSObject {
         case vertical
     }
 
-    public init(threshold: CGFloat = 12, ratioThreshold: CGFloat = 1.2) {
+    public init(threshold: CGFloat = 25, ratioThreshold: CGFloat = 1.3) {
         self.threshold = threshold
         self.ratioThreshold = ratioThreshold
         super.init()
@@ -66,11 +66,8 @@ public final class DirectionLock: NSObject {
             } else if dy > dx * ratioThreshold {
                 lockedAxis = .vertical
                 horizontalScrollView?.isScrollEnabled = false
-            } else {
-                // Ambiguous - default to horizontal for primary navigation
-                lockedAxis = .horizontal
-                verticalScrollView?.isScrollEnabled = false
             }
+            // When ambiguous (diagonal swipe), don't lock - let both scroll views compete naturally
         }
 
         return lockedAxis

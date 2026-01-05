@@ -51,20 +51,14 @@ public struct TodayGridView: View {
             if viewModel.todaySummaries.isEmpty {
                 emptyState
             } else {
-                LazyVGrid(columns: columns, spacing: 12) {
+                LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(viewModel.todaySummaries) { summary in
-                        VStack(spacing: 4) {
-                            DotView(
-                                summary: summary,
-                                size: dotSize,
-                                onTap: { viewModel.selectBucket(summary.bucket) }
-                            )
-
-                            Text(bucketLabel(for: summary.bucket))
-                                .font(.caption2)
-                                .foregroundStyle(.tertiary)
-                                .lineLimit(1)
-                        }
+                        DotView(
+                            summary: summary,
+                            size: dotSize,
+                            isCurrentMoment: isCurrentMoment(summary.bucket),
+                            onTap: { viewModel.selectBucket(summary.bucket) }
+                        )
                     }
                 }
                 .padding(.horizontal, 16)
@@ -131,8 +125,25 @@ public struct TodayGridView: View {
         viewModel.todayZoomController.currentScale.displayName
     }
 
-    private func bucketLabel(for bucket: TimeBucket) -> String {
-        bucket.displayLabel()
+    private func isCurrentMoment(_ bucket: TimeBucket) -> Bool {
+        let calendar = Calendar.current
+        let now = Date()
+
+        switch bucket.type {
+        case .hour:
+            // Check if this hour bucket contains the current hour
+            return calendar.isDate(bucket.start, equalTo: now, toGranularity: .hour)
+        case .day:
+            return calendar.isDateInToday(bucket.start)
+        case .week:
+            let bucketingService = TimeBucketingService.current
+            let currentWeekStart = bucketingService.startOfWeek(for: now)
+            return bucket.start == currentWeekStart
+        case .month:
+            return calendar.isDate(bucket.start, equalTo: now, toGranularity: .month)
+        case .year:
+            return calendar.isDate(bucket.start, equalTo: now, toGranularity: .year)
+        }
     }
 
     private var emptyState: some View {

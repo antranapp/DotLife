@@ -6,31 +6,70 @@ import DotLifeDomain
 public struct DotView: View {
     let summary: TimeBucketSummary
     let size: CGFloat
+    let isCurrentMoment: Bool
     let onTap: () -> Void
+
+    /// Breathing animation state
+    @State private var isBreathing = false
 
     public init(
         summary: TimeBucketSummary,
         size: CGFloat = 32,
+        isCurrentMoment: Bool = false,
         onTap: @escaping () -> Void
     ) {
         self.summary = summary
         self.size = size
+        self.isCurrentMoment = isCurrentMoment
         self.onTap = onTap
     }
 
     public var body: some View {
         Button(action: onTap) {
-            Circle()
-                .fill(fillColor)
-                .overlay(
-                    // Add subtle ring for multi-experience buckets
+            ZStack {
+                // Breathing glow effect for current moment
+                if isCurrentMoment {
                     Circle()
-                        .strokeBorder(ringColor, lineWidth: ringWidth)
-                )
-                .frame(width: size, height: size)
+                        .fill(Color.primary.opacity(0.15))
+                        .frame(width: size * 1.6, height: size * 1.6)
+                        .scaleEffect(isBreathing ? 1.0 : 0.7)
+                        .opacity(isBreathing ? 0.0 : 0.6)
+                }
+
+                Circle()
+                    .fill(fillColor)
+                    .overlay(
+                        // Add subtle ring for multi-experience buckets
+                        Circle()
+                            .strokeBorder(ringColor, lineWidth: ringWidth)
+                    )
+                    .frame(width: size, height: size)
+                    .scaleEffect(isCurrentMoment && isBreathing ? 1.08 : 1.0)
+            }
         }
         .buttonStyle(.plain)
         .accessibilityLabel(accessibilityLabel)
+        .onAppear {
+            if isCurrentMoment {
+                startBreathingAnimation()
+            }
+        }
+        .onChange(of: isCurrentMoment) { _, newValue in
+            if newValue {
+                startBreathingAnimation()
+            } else {
+                isBreathing = false
+            }
+        }
+    }
+
+    private func startBreathingAnimation() {
+        withAnimation(
+            .easeInOut(duration: 2.0)
+            .repeatForever(autoreverses: true)
+        ) {
+            isBreathing = true
+        }
     }
 
     // MARK: - Styling

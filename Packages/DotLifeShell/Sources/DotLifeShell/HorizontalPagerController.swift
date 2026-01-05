@@ -62,24 +62,20 @@ public final class HorizontalPagerController: UIViewController {
 
         scrollView.addSubview(contentView)
 
+        // Use contentLayoutGuide for scroll content size calculation
+        // and frameLayoutGuide for sizing relative to visible area
         NSLayoutConstraint.activate([
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            // Height must equal scroll view height (no vertical scrolling)
-            contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
-            // Width is 2x scroll view width (2 pages)
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 2)
+            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            // Height must equal scroll view visible height (no vertical scrolling)
+            contentView.heightAnchor.constraint(equalTo: scrollView.frameLayoutGuide.heightAnchor),
+            // Width is 2x scroll view visible width (2 pages)
+            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor, multiplier: 2)
         ])
 
         scrollView.delegate = self
-
-        // Register with direction lock if available
-        if let lock = directionLock {
-            lock.register(horizontalScrollView: scrollView, verticalScrollView: UIScrollView())
-            scrollView.panGestureRecognizer.delegate = lock
-        }
-
         scrollView.panGestureRecognizer.addTarget(self, action: #selector(handlePan(_:)))
     }
 
@@ -102,7 +98,7 @@ public final class HorizontalPagerController: UIViewController {
                 placeholder.view.topAnchor.constraint(equalTo: contentView.topAnchor),
                 placeholder.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
                 placeholder.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-                placeholder.view.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+                placeholder.view.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
             ])
             placeholder.didMove(toParent: self)
             return
@@ -120,7 +116,7 @@ public final class HorizontalPagerController: UIViewController {
             hostingController.view.topAnchor.constraint(equalTo: contentView.topAnchor),
             hostingController.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             hostingController.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            hostingController.view.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+            hostingController.view.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
         ])
 
         hostingController.didMove(toParent: self)
@@ -145,7 +141,7 @@ public final class HorizontalPagerController: UIViewController {
             visualizeVC.view.topAnchor.constraint(equalTo: contentView.topAnchor),
             visualizeVC.view.leadingAnchor.constraint(equalTo: contentView.centerXAnchor),
             visualizeVC.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            visualizeVC.view.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+            visualizeVC.view.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
         ])
 
         visualizeVC.didMove(toParent: self)
@@ -199,4 +195,5 @@ extension HorizontalPagerController: UIScrollViewDelegate {
         directionLock?.enableAllScrolling()
     }
 }
+
 #endif

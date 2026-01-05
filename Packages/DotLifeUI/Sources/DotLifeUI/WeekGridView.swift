@@ -58,21 +58,14 @@ public struct WeekGridView: View {
             if viewModel.weekSummaries.isEmpty {
                 emptyState
             } else {
-                LazyVGrid(columns: columns, spacing: 12) {
+                LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(viewModel.weekSummaries) { summary in
-                        VStack(spacing: 8) {
-                            DotView(
-                                summary: summary,
-                                size: dotSize,
-                                onTap: { viewModel.selectBucket(summary.bucket) }
-                            )
-
-                            Text(bucketLabel(for: summary.bucket))
-                                .font(.caption)
-                                .foregroundStyle(isCurrentPeriod(summary.bucket) ? .primary : .tertiary)
-                                .fontWeight(isCurrentPeriod(summary.bucket) ? .medium : .regular)
-                                .lineLimit(1)
-                        }
+                        DotView(
+                            summary: summary,
+                            size: dotSize,
+                            isCurrentMoment: isCurrentPeriod(summary.bucket),
+                            onTap: { viewModel.selectBucket(summary.bucket) }
+                        )
                     }
                 }
                 .padding(.horizontal, 24)
@@ -130,10 +123,6 @@ public struct WeekGridView: View {
 
     private var scaleLabel: String {
         viewModel.weekZoomController.currentScale.displayName
-    }
-
-    private func bucketLabel(for bucket: TimeBucket) -> String {
-        bucket.displayLabel()
     }
 
     private func isCurrentPeriod(_ bucket: TimeBucket) -> Bool {
