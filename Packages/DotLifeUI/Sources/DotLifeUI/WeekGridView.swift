@@ -51,6 +51,7 @@ public struct WeekGridView: View {
                 .font(typography.caption)
                 .foregroundStyle(colors.textSecondary.opacity(0.7))
                 .padding(.top, spacing.xl)
+                .accessibilityIdentifier("visualize.week.hint")
 
             Spacer()
 
@@ -59,10 +60,12 @@ public struct WeekGridView: View {
                 Text(headerText)
                     .font(typography.title)
                     .foregroundStyle(colors.textSecondary)
+                    .accessibilityIdentifier("visualize.week.headerLabel")
 
                 Text(scaleLabel)
                     .font(typography.caption)
                     .foregroundStyle(colors.textSecondary.opacity(0.7))
+                    .accessibilityIdentifier("visualize.week.scaleLabel")
             }
 
             // Grid with zoom gesture
@@ -82,6 +85,7 @@ public struct WeekGridView: View {
                 .padding(.horizontal, spacing.xl)
                 .frame(maxWidth: .infinity)
                 .pinchToZoom(controller: viewModel.weekZoomController)
+                .accessibilityIdentifier("visualize.week.grid")
             }
 
             Spacer()
@@ -89,6 +93,8 @@ public struct WeekGridView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .foregroundStyle(colors.textPrimary)
         .background(colors.appBackground.ignoresSafeArea())
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("visualize.week.screen")
         .onAppear {
             Task {
                 await viewModel.refreshWeekData()
@@ -145,9 +151,11 @@ public struct WeekGridView: View {
         return VStack(spacing: 12) {
             ProgressView()
                 .tint(colors.accent)
+                .accessibilityIdentifier("visualize.week.loadingIndicator")
             Text("Loading...")
                 .font(typography.caption)
                 .foregroundStyle(colors.textSecondary)
+                .accessibilityIdentifier("visualize.week.loadingLabel")
         }
         .frame(maxWidth: .infinity, maxHeight: 200)
     }

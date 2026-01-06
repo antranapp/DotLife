@@ -51,10 +51,12 @@ public struct TodayGridView: View {
                 Text(headerText)
                     .font(typography.title)
                     .foregroundStyle(colors.textSecondary)
+                    .accessibilityIdentifier("visualize.today.headerLabel")
 
                 Text(scaleLabel)
                     .font(typography.caption)
                     .foregroundStyle(colors.textSecondary.opacity(0.7))
+                    .accessibilityIdentifier("visualize.today.scaleLabel")
             }
             .padding(.top, spacing.xl)
 
@@ -75,6 +77,7 @@ public struct TodayGridView: View {
                 .padding(.horizontal, spacing.lg)
                 .frame(maxWidth: .infinity)
                 .pinchToZoom(controller: viewModel.todayZoomController)
+                .accessibilityIdentifier("visualize.today.grid")
             }
 
             Spacer()
@@ -84,10 +87,13 @@ public struct TodayGridView: View {
                 .font(typography.caption)
                 .foregroundStyle(colors.textSecondary.opacity(0.7))
                 .padding(.bottom, spacing.xl)
+                .accessibilityIdentifier("visualize.today.hint")
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .foregroundStyle(colors.textPrimary)
         .background(colors.appBackground.ignoresSafeArea())
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("visualize.today.screen")
         .onAppear {
             Task {
                 await viewModel.refreshTodayData()
@@ -150,9 +156,11 @@ public struct TodayGridView: View {
         return VStack(spacing: 12) {
             ProgressView()
                 .tint(colors.accent)
+                .accessibilityIdentifier("visualize.today.loadingIndicator")
             Text("Loading...")
                 .font(typography.caption)
                 .foregroundStyle(colors.textSecondary)
+                .accessibilityIdentifier("visualize.today.loadingLabel")
         }
         .frame(maxWidth: .infinity, maxHeight: 300)
     }

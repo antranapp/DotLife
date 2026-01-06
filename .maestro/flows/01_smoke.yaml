@@ -9,11 +9,13 @@ name: Smoke Test - App Launch
 
 # Wait for app to fully load
 - extendedWaitUntil:
-    visible: "What are you appreciating?"
+    visible:
+      id: "capture.noteTextField"
     timeout: 10000
 
 # Verify Capture screen is visible via text field placeholder
-- assertVisible: "What are you appreciating?"
+- assertVisible:
+    id: "capture.noteTextField"
 
 # Take a screenshot to verify UI state
 - takeScreenshot: smoke_capture_screen

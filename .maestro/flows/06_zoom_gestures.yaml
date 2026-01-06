@@ -9,7 +9,8 @@ name: Visualize - Zoom Gestures
 
 # Wait for app to load
 - extendedWaitUntil:
-    visible: "What are you appreciating?"
+    visible:
+      id: "capture.noteTextField"
     timeout: 10000
 
 # Navigate to Visualize
@@ -19,6 +20,10 @@ name: Visualize - Zoom Gestures
 
 # Wait for animation
 - waitForAnimationToEnd
+
+# Verify Today grid is visible
+- assertVisible:
+    id: "visualize.today.grid"
 
 # Take screenshot of Visualize screen
 - takeScreenshot: zoom_01_visualize

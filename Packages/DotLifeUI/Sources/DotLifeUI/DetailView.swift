@@ -51,6 +51,7 @@ public struct DetailView: View {
                     Button("Done") {
                         onDismiss()
                     }
+                    .accessibilityIdentifier("detail.doneButton")
                 }
             }
             #else
@@ -59,6 +60,7 @@ public struct DetailView: View {
                     Button("Done") {
                         onDismiss()
                     }
+                    .accessibilityIdentifier("detail.doneButton")
                 }
             }
             #endif
@@ -66,6 +68,7 @@ public struct DetailView: View {
                 addExperienceSheet
             }
             .tint(colors.accent)
+            .accessibilityIdentifier("detail.screen")
         }
         .task {
             await viewModel.loadExperiences()
@@ -90,11 +93,13 @@ public struct DetailView: View {
                         .foregroundStyle(colors.accent)
                         .font(typography.body)
                 }
+                .accessibilityIdentifier("detail.addExperienceButton")
             }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(colors.appBackground)
+        .accessibilityIdentifier("detail.experienceList")
         .refreshable {
             await viewModel.loadExperiences()
         }
@@ -129,9 +134,11 @@ public struct DetailView: View {
                     .background(colors.accent)
                     .clipShape(Capsule())
             }
+            .accessibilityIdentifier("detail.emptyAddButton")
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .accessibilityIdentifier("detail.emptyState")
     }
 
     // MARK: - Loading
@@ -143,11 +150,14 @@ public struct DetailView: View {
         return VStack(spacing: 12) {
             ProgressView()
                 .tint(colors.accent)
+                .accessibilityIdentifier("detail.loadingIndicator")
             Text("Loading...")
                 .font(typography.caption)
                 .foregroundStyle(colors.textSecondary)
+                .accessibilityIdentifier("detail.loadingLabel")
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .accessibilityIdentifier("detail.loadingState")
     }
 
     // MARK: - Add Sheet
@@ -168,6 +178,8 @@ public struct DetailView: View {
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal, spacing.lg)
+                .accessibilityIdentifier("detail.addSheet.momentPicker")
+                .accessibilityIdentifier("detail.addSheet.momentPicker")
 
                 // Note input
                 TextField("What are you appreciating?", text: $newNoteText, axis: .vertical)
@@ -179,6 +191,8 @@ public struct DetailView: View {
                     .clipShape(RoundedRectangle(cornerRadius: radii.md))
                     .padding(.horizontal, spacing.lg)
                     .lineLimit(3...6)
+                    .accessibilityIdentifier("detail.addSheet.noteTextField")
+                    .accessibilityIdentifier("detail.addSheet.noteTextField")
 
                 // Action buttons
                 HStack(spacing: 16) {
@@ -199,6 +213,8 @@ public struct DetailView: View {
                         }
                     }
                     .buttonStyle(.plain)
+                    .accessibilityIdentifier("detail.addSheet.dotButton")
+                    .accessibilityIdentifier("detail.addSheet.dotButton")
 
                     // Add note button
                     Button(action: {
@@ -216,6 +232,7 @@ public struct DetailView: View {
                             .background(newNoteText.isEmpty ? colors.textSecondary.opacity(0.3) : colors.accent)
                             .clipShape(RoundedRectangle(cornerRadius: radii.md))
                     }
+                    .accessibilityIdentifier("detail.addSheet.addNoteButton")
                     .disabled(newNoteText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
                 .padding(.horizontal, spacing.lg)
@@ -226,6 +243,7 @@ public struct DetailView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(colors.appBackground.ignoresSafeArea())
             .foregroundStyle(colors.textPrimary)
+            .accessibilityIdentifier("detail.addSheet")
             .navigationTitle("Add Experience")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
@@ -235,6 +253,7 @@ public struct DetailView: View {
                         newNoteText = ""
                         viewModel.hideAdd()
                     }
+                    .accessibilityIdentifier("detail.addSheet.cancelButton")
                 }
             }
             #else
@@ -244,6 +263,7 @@ public struct DetailView: View {
                         newNoteText = ""
                         viewModel.hideAdd()
                     }
+                    .accessibilityIdentifier("detail.addSheet.cancelButton")
                 }
             }
             #endif
@@ -265,6 +285,10 @@ struct ExperienceRow: View {
         themeManager.tokens(for: colorScheme)
     }
 
+    private var rowIdentifier: String {
+        "detail.experienceRow.\(experience.id.uuidString)"
+    }
+
     var body: some View {
         let colors = tokens.colors
         let typography = tokens.typography
@@ -277,6 +301,7 @@ struct ExperienceRow: View {
                 .font(typography.body)
                 .foregroundStyle(colors.textSecondary)
                 .frame(width: 24)
+                .accessibilityIdentifier("\(rowIdentifier).icon")
 
             // Content
             VStack(alignment: .leading, spacing: 4) {
@@ -290,6 +315,7 @@ struct ExperienceRow: View {
                     .padding(.vertical, spacing.xs / 2)
                     .background(colors.dotBase.opacity(0.08))
                     .clipShape(Capsule())
+                    .accessibilityIdentifier("\(rowIdentifier).momentType")
             }
 
             Spacer()
@@ -298,8 +324,10 @@ struct ExperienceRow: View {
             Text(timeString)
                 .font(typography.caption)
                 .foregroundStyle(colors.textSecondary.opacity(0.7))
+                .accessibilityIdentifier("\(rowIdentifier).timestamp")
         }
         .padding(.vertical, 4)
+        .accessibilityIdentifier(rowIdentifier)
         #if os(iOS)
         .fullScreenCover(isPresented: $showingFullPhoto) {
             if let photoPath = experience.photoLocalPath {
@@ -336,6 +364,7 @@ struct ExperienceRow: View {
                 Text(text)
                     .font(typography.body)
                     .foregroundStyle(colors.textPrimary)
+                    .accessibilityIdentifier("\(rowIdentifier).noteText")
             }
         case .link:
             if let url = experience.linkURL {
@@ -350,10 +379,12 @@ struct ExperienceRow: View {
                             .foregroundStyle(colors.accent)
                     }
                 }
+                .accessibilityIdentifier("\(rowIdentifier).link")
             }
         case .photo:
             if let thumbnailPath = experience.photoThumbnailPath {
                 PhotoThumbnailView(thumbnailPath: thumbnailPath)
+                    .accessibilityIdentifier("\(rowIdentifier).photoThumbnail")
                     .onTapGesture {
                         showingFullPhoto = true
                     }
@@ -367,6 +398,7 @@ struct ExperienceRow: View {
                         Image(systemName: "photo")
                             .foregroundStyle(colors.textSecondary)
                     }
+                    .accessibilityIdentifier("\(rowIdentifier).photoFallback")
                     .onTapGesture {
                         showingFullPhoto = true
                     }
@@ -374,12 +406,14 @@ struct ExperienceRow: View {
                 Text("Photo")
                     .font(typography.body)
                     .foregroundStyle(colors.textSecondary)
+                    .accessibilityIdentifier("\(rowIdentifier).photoLabel")
             }
         case .dot:
             Text("Moment")
                 .font(typography.body)
                 .foregroundStyle(colors.textSecondary)
                 .italic()
+                .accessibilityIdentifier("\(rowIdentifier).dotLabel")
         }
     }
 
@@ -473,6 +507,7 @@ struct PhotoFullScreenView: View {
                         .tint(colors.textPrimary)
                 }
             }
+            .accessibilityIdentifier("detail.photo.fullscreen")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -481,6 +516,7 @@ struct PhotoFullScreenView: View {
                         onDismiss()
                     }
                     .foregroundStyle(colors.textPrimary)
+                    .accessibilityIdentifier("detail.photo.doneButton")
                 }
             }
             .toolbarBackground(.hidden, for: .navigationBar)
@@ -491,6 +527,7 @@ struct PhotoFullScreenView: View {
                         onDismiss()
                     }
                     .foregroundStyle(colors.textPrimary)
+                    .accessibilityIdentifier("detail.photo.doneButton")
                 }
             }
             #endif
@@ -602,6 +639,7 @@ public struct DetailViewForPush: View {
             addExperienceSheet
         }
         .tint(colors.accent)
+        .accessibilityIdentifier("detail.screen")
         .task {
             await viewModel.loadExperiences()
         }
@@ -625,11 +663,13 @@ public struct DetailViewForPush: View {
                         .foregroundStyle(colors.accent)
                         .font(typography.body)
                 }
+                .accessibilityIdentifier("detail.addExperienceButton")
             }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(colors.appBackground)
+        .accessibilityIdentifier("detail.experienceList")
         .refreshable {
             await viewModel.loadExperiences()
         }
@@ -664,9 +704,11 @@ public struct DetailViewForPush: View {
                     .background(colors.accent)
                     .clipShape(Capsule())
             }
+            .accessibilityIdentifier("detail.emptyAddButton")
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .accessibilityIdentifier("detail.emptyState")
     }
 
     // MARK: - Loading
@@ -678,11 +720,14 @@ public struct DetailViewForPush: View {
         return VStack(spacing: 12) {
             ProgressView()
                 .tint(colors.accent)
+                .accessibilityIdentifier("detail.loadingIndicator")
             Text("Loading...")
                 .font(typography.caption)
                 .foregroundStyle(colors.textSecondary)
+                .accessibilityIdentifier("detail.loadingLabel")
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .accessibilityIdentifier("detail.loadingState")
     }
 
     // MARK: - Add Sheet
@@ -753,6 +798,7 @@ public struct DetailViewForPush: View {
                             .background(newNoteText.isEmpty ? colors.textSecondary.opacity(0.3) : colors.accent)
                             .clipShape(RoundedRectangle(cornerRadius: radii.md))
                     }
+                    .accessibilityIdentifier("detail.addSheet.addNoteButton")
                     .disabled(newNoteText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
                 .padding(.horizontal, spacing.lg)
@@ -763,6 +809,7 @@ public struct DetailViewForPush: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(colors.appBackground.ignoresSafeArea())
             .foregroundStyle(colors.textPrimary)
+            .accessibilityIdentifier("detail.addSheet")
             .navigationTitle("Add Experience")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
@@ -772,6 +819,7 @@ public struct DetailViewForPush: View {
                         newNoteText = ""
                         viewModel.hideAdd()
                     }
+                    .accessibilityIdentifier("detail.addSheet.cancelButton")
                 }
             }
             #else
@@ -781,6 +829,7 @@ public struct DetailViewForPush: View {
                         newNoteText = ""
                         viewModel.hideAdd()
                     }
+                    .accessibilityIdentifier("detail.addSheet.cancelButton")
                 }
             }
             #endif

@@ -89,6 +89,7 @@ public struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
                         .padding(.vertical, spacing.xs)
+                        .accessibilityIdentifier("settings.theme.\(theme.id)")
                     }
                 } header: {
                     Text("Theme")
@@ -106,6 +107,7 @@ public struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    .accessibilityIdentifier("settings.appearancePicker")
                 } header: {
                     Text("Appearance")
                         .font(typography.caption)
@@ -128,6 +130,7 @@ public struct SettingsView: View {
                         viewModel.resetToDefault()
                     }
                     .foregroundStyle(colors.accent)
+                    .accessibilityIdentifier("settings.resetButton")
                 }
 
                 Section {
@@ -136,6 +139,7 @@ public struct SettingsView: View {
                         Spacer()
                         Text("1.0.0")
                             .foregroundStyle(colors.textSecondary)
+                            .accessibilityIdentifier("settings.versionValue")
                     }
                 } header: {
                     Text("About")
@@ -145,6 +149,7 @@ public struct SettingsView: View {
             .foregroundStyle(colors.textPrimary)
             .scrollContentBackground(.hidden)
             .background(colors.appBackground.ignoresSafeArea())
+            .accessibilityIdentifier("settings.screen")
             .navigationTitle("Settings")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
@@ -153,6 +158,7 @@ public struct SettingsView: View {
                     Button("Done") {
                         dismiss()
                     }
+                    .accessibilityIdentifier("settings.doneButton")
                 }
             }
             #else
@@ -161,6 +167,7 @@ public struct SettingsView: View {
                     Button("Done") {
                         dismiss()
                     }
+                    .accessibilityIdentifier("settings.doneButton")
                 }
             }
             #endif
@@ -248,6 +255,7 @@ struct TemplateEditorView: View {
                 .foregroundStyle(colors.textPrimary)
                 .lineLimit(2...4)
                 .focused($isFocused)
+                .accessibilityIdentifier("settings.templateTextField")
 
             // Validation status
             if let error = viewModel.validationError {
@@ -258,6 +266,7 @@ struct TemplateEditorView: View {
                     Text(error)
                         .font(typography.caption)
                         .foregroundStyle(colors.accent)
+                        .accessibilityIdentifier("settings.templateErrorLabel")
                 }
             } else {
                 HStack(spacing: 4) {
@@ -267,6 +276,7 @@ struct TemplateEditorView: View {
                     Text("Template is valid")
                         .font(typography.caption)
                         .foregroundStyle(colors.textSecondary)
+                        .accessibilityIdentifier("settings.templateValidLabel")
                 }
             }
 
@@ -276,8 +286,10 @@ struct TemplateEditorView: View {
             Text("Preview")
                 .font(typography.caption)
                 .foregroundStyle(colors.textSecondary)
+                .accessibilityIdentifier("settings.templatePreviewLabel")
 
             TemplatePreview(template: viewModel.templateText)
+                .accessibilityIdentifier("settings.templatePreview")
         }
     }
 }

@@ -5,15 +5,18 @@ appId: app.antran.dotlife
 name: Detail - View and Add Experience
 
 ---
-- launchApp
+- launchApp:
+    clearState: true
 
 # Wait for app to load
 - extendedWaitUntil:
-    visible: "What are you appreciating?"
+    visible:
+      id: "capture.noteTextField"
     timeout: 10000
 
 # First add a note so we have data
-- tapOn: "What are you appreciating?"
+- tapOn:
+    id: "capture.noteTextField"
 - inputText: "Test experience for detail"
 - pressKey: Enter
 
@@ -22,7 +25,8 @@ name: Detail - View and Add Experience
 
 # Verify text field cleared
 - extendedWaitUntil:
-    visible: "What are you appreciating?"
+    visible:
+      id: "capture.noteTextField"
     timeout: 5000
 
 # Take screenshot after save
@@ -36,8 +40,33 @@ name: Detail - View and Add Experience
 # Wait for animation
 - waitForAnimationToEnd
 
-# Take screenshot of Visualize
-- takeScreenshot: detail_02_visualize
+# Ensure Today grid is visible
+- extendedWaitUntil:
+    visible:
+      id: "visualize.today.grid"
+    timeout: 5000
 
-# Note: Tapping on dots requires knowing exact positions
-# which vary by time. Manual testing recommended for detail view.
+# Tap current moment dot to open detail
+- tapOn:
+    id: "visualize.dot.current"
+
+# Verify detail screen is shown
+- extendedWaitUntil:
+    visible:
+      id: "detail.doneButton"
+    timeout: 5000
+
+# Dismiss detail
+- tapOn:
+    id: "detail.doneButton"
+
+# Verify we stayed on Visualize (not back to Capture)
+- extendedWaitUntil:
+    visible:
+      id: "visualize.today.grid"
+    timeout: 5000
+- assertNotVisible:
+    id: "capture.noteTextField"
+
+# Take screenshot after dismiss
+- takeScreenshot: detail_02_after_dismiss

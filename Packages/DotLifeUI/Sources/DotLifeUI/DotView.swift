@@ -58,6 +58,7 @@ public struct DotView: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(accessibilityLabel)
+        .accessibilityIdentifier(accessibilityIdentifierValue)
         .onAppear {
             if isCurrentMoment {
                 startBreathingAnimation()
@@ -125,6 +126,13 @@ public struct DotView: View {
         } else {
             return "\(label): no experiences"
         }
+    }
+
+    private var accessibilityIdentifierValue: String {
+        if isCurrentMoment {
+            return "visualize.dot.current"
+        }
+        return "visualize.dot.\(summary.bucket.bucketID)"
     }
 }
 

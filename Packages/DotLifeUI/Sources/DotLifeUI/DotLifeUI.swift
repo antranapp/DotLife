@@ -70,12 +70,15 @@ public struct CaptureView: View {
                                 .padding(spacing.lg)
                         }
                         .accessibilityLabel("Settings")
+                        .accessibilityIdentifier("capture.settingsButton")
                     }
                     Spacer()
                 }
             }
             .background(colors.appBackground.ignoresSafeArea())
             .tint(colors.accent)
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("capture.screen")
         }
         .onAppear {
             // Focus text field for note experience
@@ -161,6 +164,7 @@ public struct CaptureView: View {
                 .background(colors.surface)
                 .clipShape(RoundedRectangle(cornerRadius: radii.md))
                 .focused($isTextFieldFocused)
+                .accessibilityIdentifier("capture.noteTextField")
                 .submitLabel(.done)
                 .onSubmit {
                     Task {
@@ -172,6 +176,7 @@ public struct CaptureView: View {
                 ProgressView()
                     .progressViewStyle(.circular)
                     .tint(colors.accent)
+                    .accessibilityIdentifier("capture.noteSavingIndicator")
             }
         }
     }
@@ -191,6 +196,7 @@ public struct CaptureView: View {
                     .background(colors.accent)
                     .clipShape(RoundedRectangle(cornerRadius: radii.md))
             }
+            .accessibilityIdentifier("capture.photoPickerButton")
             .onChange(of: selectedPhotoItem) { _, newItem in
                 Task {
                     await handlePhotoSelection(newItem)
@@ -201,12 +207,14 @@ public struct CaptureView: View {
                 ProgressView("Saving photo...")
                     .progressViewStyle(.circular)
                     .tint(colors.accent)
+                    .accessibilityIdentifier("capture.photoSavingIndicator")
             }
 
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
                     .font(typography.caption)
                     .foregroundStyle(colors.accent)
+                    .accessibilityIdentifier("capture.photoErrorLabel")
             }
         }
     }
@@ -238,6 +246,7 @@ public struct CaptureView: View {
                     .textInputAutocapitalization(.never)
                     #endif
                     .autocorrectionDisabled()
+                    .accessibilityIdentifier("capture.linkTextField")
                     .submitLabel(.done)
                     .onSubmit {
                         if viewModel.canSave {
@@ -251,6 +260,7 @@ public struct CaptureView: View {
                 if !viewModel.linkText.isEmpty {
                     Image(systemName: viewModel.isValidLink ? "checkmark.circle.fill" : "xmark.circle.fill")
                         .foregroundStyle(viewModel.isValidLink ? colors.textSecondary : colors.accent)
+                        .accessibilityIdentifier("capture.linkValidationIcon")
                 }
             }
             .padding()
@@ -270,18 +280,21 @@ public struct CaptureView: View {
                     .background(viewModel.canSave ? colors.accent : colors.textSecondary.opacity(0.3))
                     .clipShape(RoundedRectangle(cornerRadius: radii.md))
             }
+            .accessibilityIdentifier("capture.linkAddButton")
             .disabled(!viewModel.canSave)
 
             if viewModel.isSaving {
                 ProgressView()
                     .progressViewStyle(.circular)
                     .tint(colors.accent)
+                    .accessibilityIdentifier("capture.linkSavingIndicator")
             }
 
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
                     .font(typography.caption)
                     .foregroundStyle(colors.accent)
+                    .accessibilityIdentifier("capture.linkErrorLabel")
             }
         }
     }
@@ -301,14 +314,17 @@ public struct CaptureView: View {
                     Text("Tap to add a dot")
                         .font(typography.body)
                         .foregroundStyle(colors.textSecondary)
+                        .accessibilityIdentifier("capture.dotLabel")
                 }
             }
+            .accessibilityIdentifier("capture.dotAddButton")
             .disabled(viewModel.isSaving)
 
             if viewModel.isSaving {
                 ProgressView()
                     .progressViewStyle(.circular)
                     .tint(colors.accent)
+                    .accessibilityIdentifier("capture.dotSavingIndicator")
             }
         }
     }
@@ -319,6 +335,7 @@ public struct CaptureView: View {
         Text("\(viewModel.savedCount) moment\(viewModel.savedCount == 1 ? "" : "s") saved")
             .font(typography.caption)
             .foregroundStyle(colors.textSecondary.opacity(0.7))
+            .accessibilityIdentifier("capture.savedCountLabel")
     }
 }
 
@@ -352,6 +369,7 @@ public struct VisualizeView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(colors.appBackground.ignoresSafeArea())
+        .accessibilityIdentifier("visualize.placeholder")
     }
 }
 
@@ -380,6 +398,8 @@ struct TemplateSentenceView: View {
                 segmentView(for: segment, colors: colors, typography: typography)
             }
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("capture.sentence")
     }
 
     @ViewBuilder
@@ -397,6 +417,7 @@ struct TemplateSentenceView: View {
                     .underline()
             }
             .accessibilityLabel("Experience type: \(experienceType.displayName). Tap to change.")
+            .accessibilityIdentifier("capture.experienceButton")
         case .moment:
             Button(action: onMomentTap) {
                 Text(momentType.displayName)
@@ -405,6 +426,7 @@ struct TemplateSentenceView: View {
                     .underline()
             }
             .accessibilityLabel("Moment: \(momentType.displayName). Tap to change.")
+            .accessibilityIdentifier("capture.momentButton")
         }
     }
 
