@@ -28,6 +28,9 @@ jobs:
           brew install tuist xcbeautify
           tuist version
 
+      - name: Install dependencies
+        run: tuist install
+
       - name: Generate Xcode project
         run: tuist generate --no-open
 
@@ -71,6 +74,9 @@ jobs:
         run: |
           brew install tuist
           tuist version
+
+      - name: Install dependencies
+        run: tuist install
 
       - name: Generate Xcode project
         run: tuist generate --no-open
