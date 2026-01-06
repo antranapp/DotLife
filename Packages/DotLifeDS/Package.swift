@@ -2,22 +2,22 @@
 import PackageDescription
 
 let package = Package(
-    name: "DotLifeDomain",
+    name: "DotLifeDS",
     platforms: [.iOS(.v17)],
     products: [
         .library(
-            name: "DotLifeDomain",
-            targets: ["DotLifeDomain"]
+            name: "DotLifeDS",
+            targets: ["DotLifeDS"]
         )
     ],
     targets: [
         .target(
-            name: "DotLifeDomain",
+            name: "DotLifeDS",
             dependencies: []
         ),
         .testTarget(
-            name: "DotLifeDomainTests",
-            dependencies: ["DotLifeDomain"]
+            name: "DotLifeDSTests",
+            dependencies: ["DotLifeDS"]
         )
     ]
 )

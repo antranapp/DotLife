@@ -9,12 +9,28 @@ name: Capture - Add Dot
 
 # Wait for app to load
 - extendedWaitUntil:
-    visible: "What are you appreciating?"
+    visible:
+      id: "capture.noteTextField"
     timeout: 10000
 
-# Take screenshot
-- takeScreenshot: dot_01_initial
+# Switch to dot experience type (note -> photo -> link -> dot)
+- tapOn:
+    id: "capture.experienceButton"
+- tapOn:
+    id: "capture.experienceButton"
+- tapOn:
+    id: "capture.experienceButton"
 
-# Note: Experience type switching via tappable text requires
-# SwiftUI accessibility improvements
-# This test verifies app launch for dot flow
+# Add a dot
+- tapOn:
+    id: "capture.dotAddButton"
+
+# Wait for save to complete
+- waitForAnimationToEnd
+
+# Verify saved count appears
+- assertVisible:
+    id: "capture.savedCountLabel"
+
+# Take screenshot
+- takeScreenshot: dot_01_added

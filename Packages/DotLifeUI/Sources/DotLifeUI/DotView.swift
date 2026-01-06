@@ -1,36 +1,85 @@
 import SwiftUI
 import DotLifeDomain
+import DotLifeDS
 
 /// A single dot in the visualization grid.
 /// Appearance varies based on whether the bucket has experiences.
 public struct DotView: View {
     let summary: TimeBucketSummary
     let size: CGFloat
+    let isCurrentMoment: Bool
     let onTap: () -> Void
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
+
+    /// Breathing animation state
+    @State private var isBreathing = false
 
     public init(
         summary: TimeBucketSummary,
         size: CGFloat = 32,
+        isCurrentMoment: Bool = false,
         onTap: @escaping () -> Void
     ) {
         self.summary = summary
         self.size = size
+        self.isCurrentMoment = isCurrentMoment
         self.onTap = onTap
     }
 
     public var body: some View {
+        let colors = tokens.colors
+
         Button(action: onTap) {
-            Circle()
-                .fill(fillColor)
-                .overlay(
-                    // Add subtle ring for multi-experience buckets
+            ZStack {
+                // Breathing glow effect for current moment
+                if isCurrentMoment {
                     Circle()
-                        .strokeBorder(ringColor, lineWidth: ringWidth)
-                )
-                .frame(width: size, height: size)
+                        .fill(colors.dotBase.opacity(0.15))
+                        .frame(width: size * 1.6, height: size * 1.6)
+                        .scaleEffect(isBreathing ? 1.0 : 0.7)
+                        .opacity(isBreathing ? 0.0 : 0.6)
+                }
+
+                Circle()
+                    .fill(fillColor)
+                    .overlay(
+                        // Add subtle ring for multi-experience buckets
+                        Circle()
+                            .strokeBorder(ringColor, lineWidth: ringWidth)
+                    )
+                    .frame(width: size, height: size)
+                    .scaleEffect(isCurrentMoment && isBreathing ? 1.08 : 1.0)
+            }
         }
         .buttonStyle(.plain)
         .accessibilityLabel(accessibilityLabel)
+        .accessibilityIdentifier(accessibilityIdentifierValue)
+        .onAppear {
+            if isCurrentMoment {
+                startBreathingAnimation()
+            }
+        }
+        .onChange(of: isCurrentMoment) { _, newValue in
+            if newValue {
+                startBreathingAnimation()
+            } else {
+                isBreathing = false
+            }
+        }
+    }
+
+    private func startBreathingAnimation() {
+        withAnimation(
+            .easeInOut(duration: 2.0)
+            .repeatForever(autoreverses: true)
+        ) {
+            isBreathing = true
+        }
     }
 
     // MARK: - Styling
@@ -38,10 +87,10 @@ public struct DotView: View {
     private var fillColor: Color {
         if summary.hasMoments {
             // Filled dot: primary color with slight opacity variation
-            return Color.primary.opacity(fillOpacity)
+            return tokens.colors.dotBase.opacity(fillOpacity)
         } else {
             // Empty dot: very soft background texture
-            return Color.primary.opacity(0.08)
+            return tokens.colors.dotBase.opacity(0.1)
         }
     }
 
@@ -49,20 +98,20 @@ public struct DotView: View {
         // Base opacity for filled dots
         // Multi-experience buckets get slightly higher opacity
         if summary.count >= 3 {
-            return 0.9
+            return 1.0
         } else if summary.count >= 2 {
-            return 0.75
+            return 0.9
         } else {
-            return 0.6
+            return 0.85
         }
     }
 
     private var ringColor: Color {
         // Subtle ring for multi-experience buckets
         if summary.count >= 2 {
-            return Color.primary.opacity(0.2)
+            return tokens.colors.dotBase.opacity(0.25)
         } else {
-            return Color.clear
+            return tokens.colors.dotBase.opacity(0)
         }
     }
 
@@ -77,6 +126,13 @@ public struct DotView: View {
         } else {
             return "\(label): no experiences"
         }
+    }
+
+    private var accessibilityIdentifierValue: String {
+        if isCurrentMoment {
+            return "visualize.dot.current"
+        }
+        return "visualize.dot.\(summary.bucket.bucketID)"
     }
 }
 
@@ -114,6 +170,7 @@ struct DotView_Previews: PreviewProvider {
             )
         }
         .padding()
+        .environmentObject(ThemeManager())
     }
 }
 #endif

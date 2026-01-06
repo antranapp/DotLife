@@ -42,6 +42,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E0FF3870C4EA9134DAEB6DC2"
+               BuildableName = "DotLifeDS.framework"
+               BlueprintName = "DotLifeDS"
+               ReferencedContainer = "container:Packages/DotLifeDS/DotLifeDS.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "6132322430FB4EB521579561"
                BuildableName = "DotLifeDomain.framework"
                BlueprintName = "DotLifeDomain"

@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "DotLifeUI",
-    platforms: [.iOS(.v17), .macOS(.v14)],
+    platforms: [.iOS(.v17)],
     products: [
         .library(
             name: "DotLifeUI",
@@ -11,12 +11,13 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../DotLifeDomain")
+        .package(path: "../DotLifeDomain"),
+        .package(path: "../DotLifeDS")
     ],
     targets: [
         .target(
             name: "DotLifeUI",
-            dependencies: ["DotLifeDomain"]
+            dependencies: ["DotLifeDomain", "DotLifeDS"]
         ),
         .testTarget(
             name: "DotLifeUITests",

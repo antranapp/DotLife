@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(/usr/libexec/java_home)"
+      "Bash(/usr/libexec/java_home)",
+      "WebSearch",
+      "Bash(curl:*)"
     ]
   }
 }

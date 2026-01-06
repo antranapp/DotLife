@@ -9,11 +9,13 @@ name: Capture - Add Note
 
 # Wait for app to fully load
 - extendedWaitUntil:
-    visible: "What are you appreciating?"
+    visible:
+      id: "capture.noteTextField"
     timeout: 10000
 
 # Type in the text field
-- tapOn: "What are you appreciating?"
+- tapOn:
+    id: "capture.noteTextField"
 - inputText: "Beautiful sunset today"
 
 # Submit via return key
@@ -24,7 +26,8 @@ name: Capture - Add Note
 
 # Verify text field was cleared (placeholder reappears after save)
 - extendedWaitUntil:
-    visible: "What are you appreciating?"
+    visible:
+      id: "capture.noteTextField"
     timeout: 5000
 
 # Take screenshot to verify save completed

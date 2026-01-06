@@ -1,9 +1,16 @@
 import SwiftUI
 import DotLifeDomain
+import DotLifeDS
 
 /// Grid view showing the current week at various zoom scales.
 public struct WeekGridView: View {
     @ObservedObject private var viewModel: VisualizeViewModel
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
 
     public init(viewModel: VisualizeViewModel) {
         self._viewModel = ObservedObject(wrappedValue: viewModel)
@@ -34,79 +41,68 @@ public struct WeekGridView: View {
     }
 
     public var body: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+        let spacing = tokens.spacing
+
         VStack(spacing: 20) {
             // Hint
             Text("Swipe up for Today")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-                .padding(.top, 20)
+                .font(typography.caption)
+                .foregroundStyle(colors.textSecondary.opacity(0.7))
+                .padding(.top, spacing.xl)
+                .accessibilityIdentifier("visualize.week.hint")
 
             Spacer()
 
             // Header with scale indicator
             VStack(spacing: 4) {
                 Text(headerText)
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
+                    .font(typography.title)
+                    .foregroundStyle(colors.textSecondary)
+                    .accessibilityIdentifier("visualize.week.headerLabel")
 
                 Text(scaleLabel)
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                    .font(typography.caption)
+                    .foregroundStyle(colors.textSecondary.opacity(0.7))
+                    .accessibilityIdentifier("visualize.week.scaleLabel")
             }
 
             // Grid with zoom gesture
             if viewModel.weekSummaries.isEmpty {
                 emptyState
             } else {
-                LazyVGrid(columns: columns, spacing: 12) {
+                LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(viewModel.weekSummaries) { summary in
-                        VStack(spacing: 8) {
-                            DotView(
-                                summary: summary,
-                                size: dotSize,
-                                onTap: { viewModel.selectBucket(summary.bucket) }
-                            )
-
-                            Text(bucketLabel(for: summary.bucket))
-                                .font(.caption)
-                                .foregroundStyle(isCurrentPeriod(summary.bucket) ? .primary : .tertiary)
-                                .fontWeight(isCurrentPeriod(summary.bucket) ? .medium : .regular)
-                                .lineLimit(1)
-                        }
+                        DotView(
+                            summary: summary,
+                            size: dotSize,
+                            isCurrentMoment: isCurrentPeriod(summary.bucket),
+                            onTap: { viewModel.selectBucket(summary.bucket) }
+                        )
                     }
                 }
-                .padding(.horizontal, 24)
+                .padding(.horizontal, spacing.xl)
                 .frame(maxWidth: .infinity)
                 .pinchToZoom(controller: viewModel.weekZoomController)
+                .accessibilityIdentifier("visualize.week.grid")
             }
 
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .foregroundStyle(colors.textPrimary)
+        .background(colors.appBackground.ignoresSafeArea())
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("visualize.week.screen")
         .onAppear {
             Task {
                 await viewModel.refreshWeekData()
             }
         }
-        #if os(iOS)
-        .fullScreenCover(isPresented: $viewModel.showingDetail) {
-            if let detailVM = viewModel.makeDetailViewModel() {
-                DetailView(
-                    viewModel: detailVM,
-                    onDismiss: { viewModel.closeDetail() }
-                )
-            }
-        }
-        #else
-        .sheet(isPresented: $viewModel.showingDetail) {
-            if let detailVM = viewModel.makeDetailViewModel() {
-                DetailView(
-                    viewModel: detailVM,
-                    onDismiss: { viewModel.closeDetail() }
-                )
-            }
-        }
-        #endif
+        // NOTE: Detail presentation is handled by TodayGridView only
+        // to avoid duplicate .fullScreenCover conflict when both views
+        // share the same VisualizeViewModel.showingDetail binding
     }
 
     private var headerText: String {
@@ -132,10 +128,6 @@ public struct WeekGridView: View {
         viewModel.weekZoomController.currentScale.displayName
     }
 
-    private func bucketLabel(for bucket: TimeBucket) -> String {
-        bucket.displayLabel()
-    }
-
     private func isCurrentPeriod(_ bucket: TimeBucket) -> Bool {
         switch bucket.type {
         case .day:
@@ -153,11 +145,17 @@ public struct WeekGridView: View {
     }
 
     private var emptyState: some View {
-        VStack(spacing: 12) {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
+        return VStack(spacing: 12) {
             ProgressView()
+                .tint(colors.accent)
+                .accessibilityIdentifier("visualize.week.loadingIndicator")
             Text("Loading...")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(typography.caption)
+                .foregroundStyle(colors.textSecondary)
+                .accessibilityIdentifier("visualize.week.loadingLabel")
         }
         .frame(maxWidth: .infinity, maxHeight: 200)
     }

@@ -4,6 +4,7 @@ import UIKit
 #endif
 import DotLifeDomain
 import DotLifePersistence
+import DotLifeDS
 import DotLifeUI
 import DotLifeShell
 
@@ -19,8 +20,12 @@ public enum AppBootstrapper {
     /// Shared bucketing service
     private static var bucketingService: TimeBucketingService?
 
+    /// Shared theme manager
+    private static var themeManager: ThemeManager?
+
     /// Configures the application on launch.
     /// Call this from `AppDelegate.application(_:didFinishLaunchingWithOptions:)`.
+    @MainActor
     public static func configure() {
         // Initialize Core Data stack
         coreDataStack = CoreDataStack()
@@ -30,6 +35,11 @@ public enum AppBootstrapper {
 
         // Initialize repository
         repository = CoreDataExperienceRepository(stack: coreDataStack!)
+
+        // Initialize theme manager
+        if themeManager == nil {
+            themeManager = ThemeManager()
+        }
     }
 
     /// Creates the root SwiftUI view that wraps the UIKit shell.
@@ -37,9 +47,15 @@ public enum AppBootstrapper {
     @MainActor
     public static func makeRootView() -> some View {
         #if canImport(UIKit)
-        return RootViewControllerRepresentable(
-            viewController: makeRootViewController()
-        )
+        if themeManager == nil {
+            themeManager = ThemeManager()
+        }
+        let activeThemeManager = themeManager ?? ThemeManager()
+        let controller = makeRootViewController()
+        let rootView = RootViewControllerRepresentable(viewController: controller)
+        return RootContainerView(rootView: rootView)
+            .environmentObject(activeThemeManager)
+            .preferredColorScheme(activeThemeManager.preferredColorScheme)
         #else
         return PlaceholderView()
         #endif
@@ -51,6 +67,10 @@ public enum AppBootstrapper {
     @MainActor
     public static func makeRootViewController() -> RootViewController {
         let controller = RootViewController()
+        if themeManager == nil {
+            themeManager = ThemeManager()
+        }
+        controller.themeManager = themeManager
 
         // Create the view models with dependencies
         if let repo = repository {
@@ -87,6 +107,21 @@ struct RootViewControllerRepresentable: UIViewControllerRepresentable {
     }
 }
 #endif
+
+/// Ensures the app background fills the full screen behind the UIKit shell.
+struct RootContainerView: View {
+    let rootView: RootViewControllerRepresentable
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    var body: some View {
+        let colors = themeManager.tokens(for: colorScheme).colors
+        ZStack {
+            colors.appBackground.ignoresSafeArea()
+            rootView
+        }
+    }
+}
 
 /// Placeholder view for non-iOS platforms.
 struct PlaceholderView: View {

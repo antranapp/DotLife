@@ -9,12 +9,31 @@ name: Capture - Add Link
 
 # Wait for app to load
 - extendedWaitUntil:
-    visible: "What are you appreciating?"
+    visible:
+      id: "capture.noteTextField"
     timeout: 10000
 
-# Take screenshot of initial state
-- takeScreenshot: link_01_initial
+# Switch to link experience type (note -> photo -> link)
+- tapOn:
+    id: "capture.experienceButton"
+- tapOn:
+    id: "capture.experienceButton"
 
-# Note: Experience type switching requires tapping on SwiftUI Button text
-# which may have accessibility limitations in Maestro
-# This test verifies basic app launch for link flow
+# Enter link
+- tapOn:
+    id: "capture.linkTextField"
+- inputText: "example.com"
+
+# Submit link
+- tapOn:
+    id: "capture.linkAddButton"
+
+# Wait for save to complete
+- waitForAnimationToEnd
+
+# Verify saved count appears
+- assertVisible:
+    id: "capture.savedCountLabel"
+
+# Take screenshot of saved state
+- takeScreenshot: link_01_saved

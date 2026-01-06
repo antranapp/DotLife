@@ -1,9 +1,16 @@
 import SwiftUI
 import DotLifeDomain
+import DotLifeDS
 
 /// Grid view showing the current day at various zoom scales.
 public struct TodayGridView: View {
     @ObservedObject private var viewModel: VisualizeViewModel
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
 
     public init(viewModel: VisualizeViewModel) {
         self._viewModel = ObservedObject(wrappedValue: viewModel)
@@ -34,77 +41,67 @@ public struct TodayGridView: View {
     }
 
     public var body: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+        let spacing = tokens.spacing
+
         VStack(spacing: 20) {
             // Header with scale indicator
             VStack(spacing: 4) {
                 Text(headerText)
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
+                    .font(typography.title)
+                    .foregroundStyle(colors.textSecondary)
+                    .accessibilityIdentifier("visualize.today.headerLabel")
 
                 Text(scaleLabel)
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                    .font(typography.caption)
+                    .foregroundStyle(colors.textSecondary.opacity(0.7))
+                    .accessibilityIdentifier("visualize.today.scaleLabel")
             }
-            .padding(.top, 20)
+            .padding(.top, spacing.xl)
 
             // Grid with zoom gesture
             if viewModel.todaySummaries.isEmpty {
                 emptyState
             } else {
-                LazyVGrid(columns: columns, spacing: 12) {
+                LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(viewModel.todaySummaries) { summary in
-                        VStack(spacing: 4) {
-                            DotView(
-                                summary: summary,
-                                size: dotSize,
-                                onTap: { viewModel.selectBucket(summary.bucket) }
-                            )
-
-                            Text(bucketLabel(for: summary.bucket))
-                                .font(.caption2)
-                                .foregroundStyle(.tertiary)
-                                .lineLimit(1)
-                        }
+                        DotView(
+                            summary: summary,
+                            size: dotSize,
+                            isCurrentMoment: isCurrentMoment(summary.bucket),
+                            onTap: { viewModel.selectBucket(summary.bucket) }
+                        )
                     }
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, spacing.lg)
                 .frame(maxWidth: .infinity)
                 .pinchToZoom(controller: viewModel.todayZoomController)
+                .accessibilityIdentifier("visualize.today.grid")
             }
 
             Spacer()
 
             // Hint
             Text("Swipe down for This Week")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-                .padding(.bottom, 20)
+                .font(typography.caption)
+                .foregroundStyle(colors.textSecondary.opacity(0.7))
+                .padding(.bottom, spacing.xl)
+                .accessibilityIdentifier("visualize.today.hint")
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .foregroundStyle(colors.textPrimary)
+        .background(colors.appBackground.ignoresSafeArea())
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("visualize.today.screen")
         .onAppear {
             Task {
                 await viewModel.refreshTodayData()
             }
         }
-        #if os(iOS)
-        .fullScreenCover(isPresented: $viewModel.showingDetail) {
-            if let detailVM = viewModel.makeDetailViewModel() {
-                DetailView(
-                    viewModel: detailVM,
-                    onDismiss: { viewModel.closeDetail() }
-                )
-            }
-        }
-        #else
-        .sheet(isPresented: $viewModel.showingDetail) {
-            if let detailVM = viewModel.makeDetailViewModel() {
-                DetailView(
-                    viewModel: detailVM,
-                    onDismiss: { viewModel.closeDetail() }
-                )
-            }
-        }
-        #endif
+        // NOTE: Detail presentation is handled at UIKit level (RootViewController)
+        // to avoid scroll view interference when modal dismisses.
+        // See VisualizeViewModel.onPresentDetail callback.
     }
 
     private var headerText: String {
@@ -131,16 +128,39 @@ public struct TodayGridView: View {
         viewModel.todayZoomController.currentScale.displayName
     }
 
-    private func bucketLabel(for bucket: TimeBucket) -> String {
-        bucket.displayLabel()
+    private func isCurrentMoment(_ bucket: TimeBucket) -> Bool {
+        let calendar = Calendar.current
+        let now = Date()
+
+        switch bucket.type {
+        case .hour:
+            // Check if this hour bucket contains the current hour
+            return calendar.isDate(bucket.start, equalTo: now, toGranularity: .hour)
+        case .day:
+            return calendar.isDateInToday(bucket.start)
+        case .week:
+            let bucketingService = TimeBucketingService.current
+            let currentWeekStart = bucketingService.startOfWeek(for: now)
+            return bucket.start == currentWeekStart
+        case .month:
+            return calendar.isDate(bucket.start, equalTo: now, toGranularity: .month)
+        case .year:
+            return calendar.isDate(bucket.start, equalTo: now, toGranularity: .year)
+        }
     }
 
     private var emptyState: some View {
-        VStack(spacing: 12) {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
+        return VStack(spacing: 12) {
             ProgressView()
+                .tint(colors.accent)
+                .accessibilityIdentifier("visualize.today.loadingIndicator")
             Text("Loading...")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(typography.caption)
+                .foregroundStyle(colors.textSecondary)
+                .accessibilityIdentifier("visualize.today.loadingLabel")
         }
         .frame(maxWidth: .infinity, maxHeight: 300)
     }
