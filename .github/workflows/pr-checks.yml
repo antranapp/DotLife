@@ -23,13 +23,10 @@ jobs:
       - name: Show Xcode version
         run: xcodebuild -version
 
-      - name: Install Tuist
+      - name: Install Tuist and xcbeautify
         run: |
-          curl -Ls https://install.tuist.io | bash
+          brew install tuist xcbeautify
           tuist version
-
-      - name: Install xcbeautify
-        run: brew install xcbeautify
 
       - name: Generate Xcode project
         run: tuist generate --no-open
@@ -72,7 +69,7 @@ jobs:
 
       - name: Install Tuist
         run: |
-          curl -Ls https://install.tuist.io | bash
+          brew install tuist
           tuist version
 
       - name: Generate Xcode project
