@@ -40,11 +40,10 @@ jobs:
       - name: Run unit tests
         run: |
           set -o pipefail
-          tuist test \
-            --scheme DotLifeApp \
-            --device "iPhone 17" \
-            --os 26.0.1 \
-            -- | xcbeautify
+          tuist test DotLifeApp \
+            -d "iPhone 17" \
+            -o 26.0.1 \
+            2>&1 | xcbeautify
         continue-on-error: false
 
       - name: Upload test results
@@ -95,10 +94,9 @@ jobs:
       - name: Build app for simulator
         run: |
           set -o pipefail
-          tuist build \
-            --scheme DotLifeApp \
-            --device "iPhone 17" \
-            --os 26.0.1
+          tuist build DotLifeApp \
+            -d "iPhone 17" \
+            -o 26.0.1
 
       - name: Install app on simulator
         run: |
