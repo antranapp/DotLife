@@ -1,24 +1,12 @@
-#if canImport(UIKit)
-import UIKit
-#endif
 import SwiftUI
 import PhotosUI
 import DotLifeDomain
+import DotLifeDS
 
 /// DotLifeUI module version.
 public enum DotLifeUIModule {
     public static let version = "0.1.0"
 }
-
-// MARK: - Color Helpers
-
-#if canImport(UIKit)
-private let backgroundColor = Color(UIColor.systemBackground)
-private let secondaryBackgroundColor = Color(UIColor.secondarySystemBackground)
-#else
-private let backgroundColor = Color.white
-private let secondaryBackgroundColor = Color.gray.opacity(0.1)
-#endif
 
 /// The Capture screen for logging experiences.
 public struct CaptureView: View {
@@ -27,6 +15,17 @@ public struct CaptureView: View {
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var showingSettings: Bool = false
     @StateObject private var settingsViewModel = SettingsViewModel()
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
+
+    private var colors: ThemeColors { tokens.colors }
+    private var typography: ThemeTypography { tokens.typography }
+    private var spacing: ThemeSpacing { tokens.spacing }
+    private var radii: ThemeRadii { tokens.radii }
 
     public init(viewModel: CaptureViewModel) {
         self._viewModel = ObservedObject(wrappedValue: viewModel)
@@ -40,14 +39,14 @@ public struct CaptureView: View {
 
                     // Sentence template
                     sentenceView
-                        .padding(.horizontal, 32)
+                        .padding(.horizontal, spacing.xxl)
 
                     Spacer()
-                        .frame(height: 40)
+                        .frame(height: spacing.xxl + spacing.sm)
 
                     // Input area
                     inputArea
-                        .padding(.horizontal, 32)
+                        .padding(.horizontal, spacing.xxl)
 
                     Spacer()
 
@@ -58,6 +57,7 @@ public struct CaptureView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .foregroundStyle(colors.textPrimary)
 
                 // Settings button
                 VStack {
@@ -66,19 +66,20 @@ public struct CaptureView: View {
                         Button(action: { showingSettings = true }) {
                             Image(systemName: "gearshape")
                                 .font(.title3)
-                                .foregroundStyle(.secondary)
-                                .padding()
+                                .foregroundStyle(colors.textSecondary)
+                                .padding(spacing.lg)
                         }
                         .accessibilityLabel("Settings")
                     }
                     Spacer()
                 }
             }
-            .background(backgroundColor)
+            .background(colors.appBackground.ignoresSafeArea())
+            .tint(colors.accent)
         }
         .onAppear {
             // Focus text field for note experience
-            if viewModel.experienceType == .note {
+            if viewModel.experienceType == .note, viewModel.isCaptureActive {
                 isTextFieldFocused = true
             }
             Task {
@@ -86,7 +87,16 @@ public struct CaptureView: View {
             }
         }
         .onChange(of: viewModel.experienceType) { _, newValue in
-            isTextFieldFocused = newValue == .note
+            if viewModel.isCaptureActive {
+                isTextFieldFocused = newValue == .note
+            }
+        }
+        .onChange(of: viewModel.isCaptureActive) { _, isActive in
+            if isActive {
+                isTextFieldFocused = viewModel.experienceType == .note
+            } else {
+                isTextFieldFocused = false
+            }
         }
         .sheet(isPresented: $showingSettings) {
             SettingsView(viewModel: settingsViewModel)
@@ -108,8 +118,8 @@ public struct CaptureView: View {
     private var experienceButton: some View {
         Button(action: { viewModel.cycleExperienceType() }) {
             Text(viewModel.experienceType.displayName)
-                .font(.title2.weight(.medium))
-                .foregroundStyle(.blue)
+                .font(typography.title)
+                .foregroundStyle(colors.accent)
                 .underline()
         }
         .accessibilityLabel("Experience type: \(viewModel.experienceType.displayName). Tap to change.")
@@ -118,8 +128,8 @@ public struct CaptureView: View {
     private var momentButton: some View {
         Button(action: { viewModel.cycleMomentType() }) {
             Text(viewModel.momentType.displayName)
-                .font(.title2.weight(.medium))
-                .foregroundStyle(.blue)
+                .font(typography.title)
+                .foregroundStyle(colors.accent)
                 .underline()
         }
         .accessibilityLabel("Moment: \(viewModel.momentType.displayName). Tap to change.")
@@ -144,11 +154,12 @@ public struct CaptureView: View {
     private var noteInput: some View {
         VStack(spacing: 16) {
             TextField("What are you appreciating?", text: $viewModel.noteText)
-                .font(.body)
+                .font(typography.body)
+                .foregroundStyle(colors.textPrimary)
                 .textFieldStyle(.plain)
                 .padding()
-                .background(secondaryBackgroundColor)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .background(colors.surface)
+                .clipShape(RoundedRectangle(cornerRadius: radii.md))
                 .focused($isTextFieldFocused)
                 .submitLabel(.done)
                 .onSubmit {
@@ -160,6 +171,7 @@ public struct CaptureView: View {
             if viewModel.isSaving {
                 ProgressView()
                     .progressViewStyle(.circular)
+                    .tint(colors.accent)
             }
         }
     }
@@ -172,12 +184,12 @@ public struct CaptureView: View {
                 photoLibrary: .shared()
             ) {
                 Label("Choose Photo", systemImage: "photo")
-                    .font(.headline)
-                    .foregroundStyle(.white)
+                    .font(typography.body)
+                    .foregroundStyle(colors.appBackground)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.blue)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .background(colors.accent)
+                    .clipShape(RoundedRectangle(cornerRadius: radii.md))
             }
             .onChange(of: selectedPhotoItem) { _, newItem in
                 Task {
@@ -188,12 +200,13 @@ public struct CaptureView: View {
             if viewModel.isSaving {
                 ProgressView("Saving photo...")
                     .progressViewStyle(.circular)
+                    .tint(colors.accent)
             }
 
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
-                    .font(.caption)
-                    .foregroundStyle(.red)
+                    .font(typography.caption)
+                    .foregroundStyle(colors.accent)
             }
         }
     }
@@ -217,7 +230,8 @@ public struct CaptureView: View {
         VStack(spacing: 16) {
             HStack {
                 TextField("example.com", text: $viewModel.linkText)
-                    .font(.body)
+                    .font(typography.body)
+                    .foregroundStyle(colors.textPrimary)
                     .textFieldStyle(.plain)
                     #if os(iOS)
                     .keyboardType(.URL)
@@ -236,12 +250,12 @@ public struct CaptureView: View {
                 // Validation indicator
                 if !viewModel.linkText.isEmpty {
                     Image(systemName: viewModel.isValidLink ? "checkmark.circle.fill" : "xmark.circle.fill")
-                        .foregroundStyle(viewModel.isValidLink ? .green : .red)
+                        .foregroundStyle(viewModel.isValidLink ? colors.textSecondary : colors.accent)
                 }
             }
             .padding()
-            .background(secondaryBackgroundColor)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .background(colors.surface)
+            .clipShape(RoundedRectangle(cornerRadius: radii.md))
 
             Button(action: {
                 Task {
@@ -249,24 +263,25 @@ public struct CaptureView: View {
                 }
             }) {
                 Text("Add Link")
-                    .font(.headline)
-                    .foregroundStyle(.white)
+                    .font(typography.body)
+                    .foregroundStyle(colors.appBackground)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(viewModel.canSave ? Color.blue : Color.gray)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .background(viewModel.canSave ? colors.accent : colors.textSecondary.opacity(0.3))
+                    .clipShape(RoundedRectangle(cornerRadius: radii.md))
             }
             .disabled(!viewModel.canSave)
 
             if viewModel.isSaving {
                 ProgressView()
                     .progressViewStyle(.circular)
+                    .tint(colors.accent)
             }
 
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
-                    .font(.caption)
-                    .foregroundStyle(.red)
+                    .font(typography.caption)
+                    .foregroundStyle(colors.accent)
             }
         }
     }
@@ -280,12 +295,12 @@ public struct CaptureView: View {
             }) {
                 VStack(spacing: 12) {
                     Circle()
-                        .fill(Color.primary)
+                        .fill(colors.dotBase)
                         .frame(width: 60, height: 60)
 
                     Text("Tap to add a dot")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .font(typography.body)
+                        .foregroundStyle(colors.textSecondary)
                 }
             }
             .disabled(viewModel.isSaving)
@@ -293,6 +308,7 @@ public struct CaptureView: View {
             if viewModel.isSaving {
                 ProgressView()
                     .progressViewStyle(.circular)
+                    .tint(colors.accent)
             }
         }
     }
@@ -301,31 +317,41 @@ public struct CaptureView: View {
 
     private var debugFooter: some View {
         Text("\(viewModel.savedCount) moment\(viewModel.savedCount == 1 ? "" : "s") saved")
-            .font(.caption2)
-            .foregroundStyle(.tertiary)
+            .font(typography.caption)
+            .foregroundStyle(colors.textSecondary.opacity(0.7))
     }
 }
 
 /// Placeholder view for the Visualize screen.
 public struct VisualizeView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
+
     public init() {}
 
     public var body: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
         VStack(spacing: 20) {
             Image(systemName: "circle.grid.3x3")
                 .font(.system(size: 60))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(colors.textSecondary)
 
             Text("Visualize")
-                .font(.title)
-                .fontWeight(.medium)
+                .font(typography.title)
+                .foregroundStyle(colors.textPrimary)
 
             Text("Your moments will appear here")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(typography.body)
+                .foregroundStyle(colors.textSecondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(backgroundColor)
+        .background(colors.appBackground.ignoresSafeArea())
     }
 }
 
@@ -338,35 +364,44 @@ struct TemplateSentenceView: View {
     let momentType: MomentType
     let onExperienceTap: () -> Void
     let onMomentTap: () -> Void
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
 
     var body: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
         FlowLayout(spacing: 4) {
             ForEach(Array(parseTemplate().enumerated()), id: \.offset) { _, segment in
-                segmentView(for: segment)
+                segmentView(for: segment, colors: colors, typography: typography)
             }
         }
     }
 
     @ViewBuilder
-    private func segmentView(for segment: TemplateSegment) -> some View {
+    private func segmentView(for segment: TemplateSegment, colors: ThemeColors, typography: ThemeTypography) -> some View {
         switch segment {
         case .text(let text):
             Text(text)
-                .font(.title2)
-                .foregroundStyle(.primary)
+                .font(typography.title)
+                .foregroundStyle(colors.textPrimary)
         case .experience:
             Button(action: onExperienceTap) {
                 Text(experienceType.displayName)
-                    .font(.title2.weight(.medium))
-                    .foregroundStyle(.blue)
+                    .font(typography.title)
+                    .foregroundStyle(colors.accent)
                     .underline()
             }
             .accessibilityLabel("Experience type: \(experienceType.displayName). Tap to change.")
         case .moment:
             Button(action: onMomentTap) {
                 Text(momentType.displayName)
-                    .font(.title2.weight(.medium))
-                    .foregroundStyle(.blue)
+                    .font(typography.title)
+                    .foregroundStyle(colors.accent)
                     .underline()
             }
             .accessibilityLabel("Moment: \(momentType.displayName). Tap to change.")

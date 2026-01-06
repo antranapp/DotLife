@@ -1,9 +1,16 @@
 import SwiftUI
 import DotLifeDomain
+import DotLifeDS
 
 /// Grid view showing the current week at various zoom scales.
 public struct WeekGridView: View {
     @ObservedObject private var viewModel: VisualizeViewModel
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
 
     public init(viewModel: VisualizeViewModel) {
         self._viewModel = ObservedObject(wrappedValue: viewModel)
@@ -34,24 +41,28 @@ public struct WeekGridView: View {
     }
 
     public var body: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+        let spacing = tokens.spacing
+
         VStack(spacing: 20) {
             // Hint
             Text("Swipe up for Today")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-                .padding(.top, 20)
+                .font(typography.caption)
+                .foregroundStyle(colors.textSecondary.opacity(0.7))
+                .padding(.top, spacing.xl)
 
             Spacer()
 
             // Header with scale indicator
             VStack(spacing: 4) {
                 Text(headerText)
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
+                    .font(typography.title)
+                    .foregroundStyle(colors.textSecondary)
 
                 Text(scaleLabel)
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                    .font(typography.caption)
+                    .foregroundStyle(colors.textSecondary.opacity(0.7))
             }
 
             // Grid with zoom gesture
@@ -68,7 +79,7 @@ public struct WeekGridView: View {
                         )
                     }
                 }
-                .padding(.horizontal, 24)
+                .padding(.horizontal, spacing.xl)
                 .frame(maxWidth: .infinity)
                 .pinchToZoom(controller: viewModel.weekZoomController)
             }
@@ -76,30 +87,16 @@ public struct WeekGridView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .foregroundStyle(colors.textPrimary)
+        .background(colors.appBackground.ignoresSafeArea())
         .onAppear {
             Task {
                 await viewModel.refreshWeekData()
             }
         }
-        #if os(iOS)
-        .fullScreenCover(isPresented: $viewModel.showingDetail) {
-            if let detailVM = viewModel.makeDetailViewModel() {
-                DetailView(
-                    viewModel: detailVM,
-                    onDismiss: { viewModel.closeDetail() }
-                )
-            }
-        }
-        #else
-        .sheet(isPresented: $viewModel.showingDetail) {
-            if let detailVM = viewModel.makeDetailViewModel() {
-                DetailView(
-                    viewModel: detailVM,
-                    onDismiss: { viewModel.closeDetail() }
-                )
-            }
-        }
-        #endif
+        // NOTE: Detail presentation is handled by TodayGridView only
+        // to avoid duplicate .fullScreenCover conflict when both views
+        // share the same VisualizeViewModel.showingDetail binding
     }
 
     private var headerText: String {
@@ -142,11 +139,15 @@ public struct WeekGridView: View {
     }
 
     private var emptyState: some View {
-        VStack(spacing: 12) {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
+        return VStack(spacing: 12) {
             ProgressView()
+                .tint(colors.accent)
             Text("Loading...")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(typography.caption)
+                .foregroundStyle(colors.textSecondary)
         }
         .frame(maxWidth: .infinity, maxHeight: 200)
     }

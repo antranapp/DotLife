@@ -10,7 +10,8 @@ let packageSettings = PackageSettings(
         "DotLifePersistence": .framework,
         "DotLifeUI": .framework,
         "DotLifeShell": .framework,
-        "DotLifeAppKit": .framework
+        "DotLifeAppKit": .framework,
+        "DotLifeDS": .framework
     ]
 )
 #endif
@@ -22,6 +23,7 @@ let package = Package(
     dependencies: [
         .package(path: "../Packages/DotLifeDomain"),
         .package(path: "../Packages/DotLifePersistence"),
+        .package(path: "../Packages/DotLifeDS"),
         .package(path: "../Packages/DotLifeUI"),
         .package(path: "../Packages/DotLifeShell"),
         .package(path: "../Packages/DotLifeAppKit")

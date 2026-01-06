@@ -1,8 +1,10 @@
 #if canImport(UIKit)
+import Combine
 import UIKit
 import SwiftUI
 import DotLifeUI
 import DotLifeDomain
+import DotLifeDS
 
 /// Vertical pager that contains Today and This Week views.
 public final class VerticalPagerController: UIViewController {
@@ -33,9 +35,14 @@ public final class VerticalPagerController: UIViewController {
     /// View model for visualization (injected from AppKit)
     public var visualizeViewModel: VisualizeViewModel?
 
+    /// Theme manager injected from AppKit
+    public var themeManager: ThemeManager?
+
     /// Child hosting controllers
     private var todayHostingController: UIViewController?
     private var weekHostingController: UIViewController?
+
+    private var themeObservation: AnyCancellable?
 
     // MARK: - Lifecycle
 
@@ -44,6 +51,13 @@ public final class VerticalPagerController: UIViewController {
         setupScrollView()
         setupPages()
         setupPinchObserver()
+        applyTheme()
+        observeThemeChanges()
+    }
+
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        applyTheme()
     }
 
     // MARK: - Pinch Observation
@@ -103,9 +117,9 @@ public final class VerticalPagerController: UIViewController {
 
         if let viewModel = visualizeViewModel {
             let todayView = TodayGridView(viewModel: viewModel)
-            hostingController = UIHostingController(rootView: todayView)
+            hostingController = makeHostingController(rootView: todayView)
         } else {
-            hostingController = UIHostingController(rootView: TodayPlaceholderView())
+            hostingController = makeHostingController(rootView: TodayPlaceholderView())
         }
 
         todayHostingController = hostingController
@@ -129,9 +143,9 @@ public final class VerticalPagerController: UIViewController {
 
         if let viewModel = visualizeViewModel {
             let weekView = WeekGridView(viewModel: viewModel)
-            hostingController = UIHostingController(rootView: weekView)
+            hostingController = makeHostingController(rootView: weekView)
         } else {
-            hostingController = UIHostingController(rootView: WeekPlaceholderView())
+            hostingController = makeHostingController(rootView: WeekPlaceholderView())
         }
 
         weekHostingController = hostingController
@@ -156,6 +170,45 @@ public final class VerticalPagerController: UIViewController {
     public func scrollTo(page: Int, animated: Bool = true) {
         let y = CGFloat(page) * scrollView.bounds.height
         scrollView.setContentOffset(CGPoint(x: 0, y: y), animated: animated)
+    }
+
+    // MARK: - Theme
+
+    private func observeThemeChanges() {
+        themeObservation = themeManager?.objectWillChange.sink { [weak self] _ in
+            self?.applyTheme()
+        }
+    }
+
+    private func applyTheme() {
+        guard let themeManager else { return }
+        overrideUserInterfaceStyle = themeManager.interfaceStyleOverride
+        todayHostingController?.overrideUserInterfaceStyle = themeManager.interfaceStyleOverride
+        weekHostingController?.overrideUserInterfaceStyle = themeManager.interfaceStyleOverride
+        let colors = themeManager.uiColors(for: traitCollection.userInterfaceStyle)
+        view.backgroundColor = colors.appBackground
+        scrollView.backgroundColor = colors.appBackground
+        contentView.backgroundColor = colors.appBackground
+        todayHostingController?.view.backgroundColor = colors.appBackground
+        weekHostingController?.view.backgroundColor = colors.appBackground
+    }
+
+    private func makeHostingController<Content: View>(rootView: Content) -> UIHostingController<AnyView> {
+        let resolvedView: AnyView
+        if let themeManager = themeManager {
+            resolvedView = AnyView(rootView.environmentObject(themeManager))
+        } else {
+            resolvedView = AnyView(rootView)
+        }
+        let hostingController = UIHostingController(rootView: resolvedView)
+        if let themeManager = themeManager {
+            hostingController.overrideUserInterfaceStyle = themeManager.interfaceStyleOverride
+            let colors = themeManager.uiColors(for: traitCollection.userInterfaceStyle)
+            hostingController.view.backgroundColor = colors.appBackground
+        } else {
+            hostingController.view.backgroundColor = .clear
+        }
+        return hostingController
     }
 
     // MARK: - Gesture Handling
@@ -197,58 +250,78 @@ extension VerticalPagerController: UIScrollViewDelegate {
 // MARK: - Placeholder Views
 
 struct TodayPlaceholderView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
+
     var body: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
         VStack(spacing: 20) {
             Image(systemName: "clock")
                 .font(.system(size: 60))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(colors.textSecondary)
 
             Text("Today")
-                .font(.title)
-                .fontWeight(.medium)
+                .font(typography.title)
+                .foregroundStyle(colors.textPrimary)
 
             Text("Swipe down for This Week")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(typography.body)
+                .foregroundStyle(colors.textSecondary)
 
             Spacer()
 
             Image(systemName: "chevron.down")
                 .font(.title2)
-                .foregroundStyle(.tertiary)
+                .foregroundStyle(colors.textSecondary.opacity(0.7))
                 .padding(.bottom, 40)
         }
         .padding(.top, 100)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(UIColor.systemBackground))
+        .background(colors.appBackground.ignoresSafeArea())
     }
 }
 
 struct WeekPlaceholderView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
+
     var body: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
         VStack(spacing: 20) {
             Image(systemName: "chevron.up")
                 .font(.title2)
-                .foregroundStyle(.tertiary)
+                .foregroundStyle(colors.textSecondary.opacity(0.7))
                 .padding(.top, 40)
 
             Spacer()
 
             Image(systemName: "calendar")
                 .font(.system(size: 60))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(colors.textSecondary)
 
             Text("This Week")
-                .font(.title)
-                .fontWeight(.medium)
+                .font(typography.title)
+                .foregroundStyle(colors.textPrimary)
 
             Text("Swipe up for Today")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(typography.body)
+                .foregroundStyle(colors.textSecondary)
         }
         .padding(.bottom, 100)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(UIColor.systemBackground))
+        .background(colors.appBackground.ignoresSafeArea())
     }
 }
 #endif

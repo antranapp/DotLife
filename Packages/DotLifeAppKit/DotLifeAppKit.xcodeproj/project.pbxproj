@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08FB6F1E6CC565BE73F5AF30 /* DotLifeDS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C188C2B7CF85EAF26401955 /* DotLifeDS.framework */; };
 		2CA1DDC5E4688F3DE5A21D72 /* DotLifePersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E146F40AD66AC484973995E /* DotLifePersistence.framework */; };
 		4CFCBF48C81E2F58A00FD2FD /* DotLifeShell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 898AA2AA53AC222318A0A9FC /* DotLifeShell.framework */; };
 		6EF8156AA58D1315AB375565 /* DotLifeUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6C6B25202DBC1BC37E2A84D /* DotLifeUI.framework */; };
@@ -28,6 +29,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4C188C2B7CF85EAF26401955 /* DotLifeDS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeDS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		64E37ECE68BB8DD89C0F7E95 /* DotLifeAppKit-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "DotLifeAppKit-Info.plist"; sourceTree = "<group>"; };
 		6E146F40AD66AC484973995E /* DotLifePersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifePersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F6ADE7B1E914AA4050AAF0 /* DotLifeDomain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeDomain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -42,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08FB6F1E6CC565BE73F5AF30 /* DotLifeDS.framework in Frameworks */,
 				E084959633C5C6D643F4316F /* DotLifeDomain.framework in Frameworks */,
 				2CA1DDC5E4688F3DE5A21D72 /* DotLifePersistence.framework in Frameworks */,
 				4CFCBF48C81E2F58A00FD2FD /* DotLifeShell.framework in Frameworks */,
@@ -81,6 +84,7 @@
 			children = (
 				B0C3730FC5D93A6E6A9184B3 /* DotLifeAppKit.framework */,
 				75F6ADE7B1E914AA4050AAF0 /* DotLifeDomain.framework */,
+				4C188C2B7CF85EAF26401955 /* DotLifeDS.framework */,
 				6E146F40AD66AC484973995E /* DotLifePersistence.framework */,
 				898AA2AA53AC222318A0A9FC /* DotLifeShell.framework */,
 				B6C6B25202DBC1BC37E2A84D /* DotLifeUI.framework */,

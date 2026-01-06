@@ -11,6 +11,9 @@
          location = "group:DotLifeAppKit/DotLifeAppKit.xcodeproj">
       </FileRef>
       <FileRef
+         location = "group:DotLifeDS/DotLifeDS.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:DotLifeDomain/DotLifeDomain.xcodeproj">
       </FileRef>
       <FileRef

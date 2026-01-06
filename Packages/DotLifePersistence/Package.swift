@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "DotLifePersistence",
-    platforms: [.iOS(.v17), .macOS(.v14)],
+    platforms: [.iOS(.v17)],
     products: [
         .library(
             name: "DotLifePersistence",

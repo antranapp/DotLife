@@ -13,6 +13,7 @@
 		4ED121013E7BD3A0F4AB0E33 /* DotLifeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB2FC8F67F03C5FEC220D2B /* DotLifeApp.swift */; };
 		707438828267649A062EAFE1 /* DotLifeAppKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B19D41D8A07B4B87A8FC5C9D /* DotLifeAppKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B518CD792541919441A98C61 /* DotLifeAppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B19D41D8A07B4B87A8FC5C9D /* DotLifeAppKit.framework */; };
+		D25D0F2275870AC6EA0F2D38 /* DotLifeDS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4AC4A6D2DDBE4DBDB8FB52B2 /* DotLifeDS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D52D45F4505ECF9E5989967B /* DotLifeDomain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2DFA62858C95DA3E40102400 /* DotLifeDomain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DF291F65674BAE73EE0D1F52 /* DotLifeUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 90A4C04670EB321E480710A4 /* DotLifeUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -25,6 +26,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				707438828267649A062EAFE1 /* DotLifeAppKit.framework in Embed Frameworks */,
+				D25D0F2275870AC6EA0F2D38 /* DotLifeDS.framework in Embed Frameworks */,
 				D52D45F4505ECF9E5989967B /* DotLifeDomain.framework in Embed Frameworks */,
 				2972EF827881DBF775966B94 /* DotLifePersistence.framework in Embed Frameworks */,
 				17084F1C47AAF65F7FAD7E48 /* DotLifeShell.framework in Embed Frameworks */,
@@ -40,6 +42,7 @@
 		076830AD941C7FFFBEB60F9E /* DotLifeShell.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeShell.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		16F1D9B365E1C796EB45FB22 /* DotLifeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DotLifeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DFA62858C95DA3E40102400 /* DotLifeDomain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeDomain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4AC4A6D2DDBE4DBDB8FB52B2 /* DotLifeDS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeDS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90A4C04670EB321E480710A4 /* DotLifeUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B19D41D8A07B4B87A8FC5C9D /* DotLifeAppKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeAppKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF189EF1331D2D9511117968 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -73,6 +76,7 @@
 				16F1D9B365E1C796EB45FB22 /* DotLifeApp.app */,
 				B19D41D8A07B4B87A8FC5C9D /* DotLifeAppKit.framework */,
 				2DFA62858C95DA3E40102400 /* DotLifeDomain.framework */,
+				4AC4A6D2DDBE4DBDB8FB52B2 /* DotLifeDS.framework */,
 				EE7280C6AF64C726F799D348 /* DotLifePersistence.framework */,
 				076830AD941C7FFFBEB60F9E /* DotLifeShell.framework */,
 				90A4C04670EB321E480710A4 /* DotLifeUI.framework */,

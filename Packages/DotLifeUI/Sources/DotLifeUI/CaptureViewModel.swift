@@ -30,6 +30,9 @@ public final class CaptureViewModel: ObservableObject {
     /// Count of saved experiences (for debug purposes)
     @Published public var savedCount: Int = 0
 
+    /// Whether the capture page is currently active in the horizontal pager
+    @Published public var isCaptureActive: Bool = true
+
     /// Whether the photo picker should be shown
     @Published public var showingPhotoPicker: Bool = false
 

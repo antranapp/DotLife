@@ -14,6 +14,7 @@
 		637BD15371B0619082669F51 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5868AEDB6D2AEC55464DAA /* SettingsView.swift */; };
 		88E7905919DE7D7BAACC3BC0 /* VisualizeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0949D17A3CCB5BFA4A71FF3 /* VisualizeViewModel.swift */; };
 		8B77CD66428F4F1A4DBA03CE /* ZoomController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBB5284ED6D2601D42D8E5E /* ZoomController.swift */; };
+		8E7CE00FD1B3762E0B5C8944 /* DotLifeDS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB491B8184640A7F23263C9E /* DotLifeDS.framework */; };
 		8FD17A2CB738B790CA1CB3F0 /* TodayGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F8309F9F580E3D8264F78B /* TodayGridView.swift */; };
 		96AE4256A1F7FEF938AAD3DD /* CaptureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEE9CB4A391B74EA48C169 /* CaptureViewModel.swift */; };
 		DCA25C8A1BE3C7D8EA2E6227 /* DotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96D15513C0131D75EC0B4C8 /* DotView.swift */; };
@@ -46,6 +47,7 @@
 		B985233E513CC5B3D307636F /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		BA03703E899B1A97E09BFA88 /* DotLifeUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBA89AC6916182673B6D7564 /* DotLifeDomain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeDomain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB491B8184640A7F23263C9E /* DotLifeDS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeDS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0949D17A3CCB5BFA4A71FF3 /* VisualizeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualizeViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -54,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E7CE00FD1B3762E0B5C8944 /* DotLifeDS.framework in Frameworks */,
 				36EF024E706D8E6662443275 /* DotLifeDomain.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -115,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				BBA89AC6916182673B6D7564 /* DotLifeDomain.framework */,
+				DB491B8184640A7F23263C9E /* DotLifeDS.framework */,
 				BA03703E899B1A97E09BFA88 /* DotLifeUI.framework */,
 			);
 			name = Products;

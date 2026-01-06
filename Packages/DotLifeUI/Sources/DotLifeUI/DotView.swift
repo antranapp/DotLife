@@ -1,5 +1,6 @@
 import SwiftUI
 import DotLifeDomain
+import DotLifeDS
 
 /// A single dot in the visualization grid.
 /// Appearance varies based on whether the bucket has experiences.
@@ -8,6 +9,12 @@ public struct DotView: View {
     let size: CGFloat
     let isCurrentMoment: Bool
     let onTap: () -> Void
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
 
     /// Breathing animation state
     @State private var isBreathing = false
@@ -25,12 +32,14 @@ public struct DotView: View {
     }
 
     public var body: some View {
+        let colors = tokens.colors
+
         Button(action: onTap) {
             ZStack {
                 // Breathing glow effect for current moment
                 if isCurrentMoment {
                     Circle()
-                        .fill(Color.primary.opacity(0.15))
+                        .fill(colors.dotBase.opacity(0.15))
                         .frame(width: size * 1.6, height: size * 1.6)
                         .scaleEffect(isBreathing ? 1.0 : 0.7)
                         .opacity(isBreathing ? 0.0 : 0.6)
@@ -77,10 +86,10 @@ public struct DotView: View {
     private var fillColor: Color {
         if summary.hasMoments {
             // Filled dot: primary color with slight opacity variation
-            return Color.primary.opacity(fillOpacity)
+            return tokens.colors.dotBase.opacity(fillOpacity)
         } else {
             // Empty dot: very soft background texture
-            return Color.primary.opacity(0.08)
+            return tokens.colors.dotBase.opacity(0.1)
         }
     }
 
@@ -88,20 +97,20 @@ public struct DotView: View {
         // Base opacity for filled dots
         // Multi-experience buckets get slightly higher opacity
         if summary.count >= 3 {
-            return 0.9
+            return 1.0
         } else if summary.count >= 2 {
-            return 0.75
+            return 0.9
         } else {
-            return 0.6
+            return 0.85
         }
     }
 
     private var ringColor: Color {
         // Subtle ring for multi-experience buckets
         if summary.count >= 2 {
-            return Color.primary.opacity(0.2)
+            return tokens.colors.dotBase.opacity(0.25)
         } else {
-            return Color.clear
+            return tokens.colors.dotBase.opacity(0)
         }
     }
 
@@ -153,6 +162,7 @@ struct DotView_Previews: PreviewProvider {
             )
         }
         .padding()
+        .environmentObject(ThemeManager())
     }
 }
 #endif

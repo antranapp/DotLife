@@ -4,6 +4,7 @@ import SwiftUI
 import UIKit
 #endif
 import DotLifeDomain
+import DotLifeDS
 
 /// Detail view showing experiences for a specific time bucket.
 public struct DetailView: View {
@@ -12,7 +13,12 @@ public struct DetailView: View {
 
     @State private var newNoteText: String = ""
     @State private var selectedMomentType: MomentType = .now
-    @Environment(\.openURL) private var openURL
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
 
     public init(
         viewModel: DetailViewModel,
@@ -23,6 +29,8 @@ public struct DetailView: View {
     }
 
     public var body: some View {
+        let colors = tokens.colors
+
         NavigationView {
             ZStack {
                 if viewModel.isLoading && viewModel.experiences.isEmpty {
@@ -33,6 +41,8 @@ public struct DetailView: View {
                     experienceList
                 }
             }
+            .background(colors.appBackground.ignoresSafeArea())
+            .foregroundStyle(colors.textPrimary)
             .navigationTitle(viewModel.bucket.extendedLabel())
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
@@ -55,6 +65,7 @@ public struct DetailView: View {
             .sheet(isPresented: $viewModel.showingAddSheet) {
                 addExperienceSheet
             }
+            .tint(colors.accent)
         }
         .task {
             await viewModel.loadExperiences()
@@ -64,7 +75,10 @@ public struct DetailView: View {
     // MARK: - Experience List
 
     private var experienceList: some View {
-        List {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
+        return List {
             ForEach(viewModel.experiences) { experience in
                 ExperienceRow(experience: experience)
             }
@@ -73,11 +87,14 @@ public struct DetailView: View {
             Section {
                 Button(action: { viewModel.showAdd() }) {
                     Label("Add an experience", systemImage: "plus.circle")
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(colors.accent)
+                        .font(typography.body)
                 }
             }
         }
         .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(colors.appBackground)
         .refreshable {
             await viewModel.loadExperiences()
         }
@@ -86,27 +103,30 @@ public struct DetailView: View {
     // MARK: - Empty State
 
     private var emptyState: some View {
-        VStack(spacing: 24) {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
+        return VStack(spacing: 24) {
             Image(systemName: "circle.dotted")
                 .font(.system(size: 60))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(colors.textSecondary)
 
             Text("No experiences yet")
-                .font(.headline)
-                .foregroundStyle(.secondary)
+                .font(typography.title)
+                .foregroundStyle(colors.textSecondary)
 
             Text("Add something to remember this moment")
-                .font(.subheadline)
-                .foregroundStyle(.tertiary)
+                .font(typography.body)
+                .foregroundStyle(colors.textSecondary.opacity(0.7))
                 .multilineTextAlignment(.center)
 
             Button(action: { viewModel.showAdd() }) {
                 Label("Add an experience", systemImage: "plus.circle.fill")
-                    .font(.headline)
-                    .foregroundStyle(.white)
+                    .font(typography.body)
+                    .foregroundStyle(colors.appBackground)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
-                    .background(Color.blue)
+                    .background(colors.accent)
                     .clipShape(Capsule())
             }
         }
@@ -117,11 +137,15 @@ public struct DetailView: View {
     // MARK: - Loading
 
     private var loadingView: some View {
-        VStack(spacing: 12) {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
+        return VStack(spacing: 12) {
             ProgressView()
+                .tint(colors.accent)
             Text("Loading...")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(typography.caption)
+                .foregroundStyle(colors.textSecondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -129,7 +153,12 @@ public struct DetailView: View {
     // MARK: - Add Sheet
 
     private var addExperienceSheet: some View {
-        NavigationView {
+        let colors = tokens.colors
+        let typography = tokens.typography
+        let spacing = tokens.spacing
+        let radii = tokens.radii
+
+        return NavigationView {
             VStack(spacing: 24) {
                 // Moment type picker
                 Picker("Moment", selection: $selectedMomentType) {
@@ -138,12 +167,17 @@ public struct DetailView: View {
                     }
                 }
                 .pickerStyle(.segmented)
-                .padding(.horizontal)
+                .padding(.horizontal, spacing.lg)
 
                 // Note input
                 TextField("What are you appreciating?", text: $newNoteText, axis: .vertical)
-                    .textFieldStyle(.roundedBorder)
-                    .padding(.horizontal)
+                    .textFieldStyle(.plain)
+                    .font(typography.body)
+                    .foregroundStyle(colors.textPrimary)
+                    .padding(spacing.lg)
+                    .background(colors.surface)
+                    .clipShape(RoundedRectangle(cornerRadius: radii.md))
+                    .padding(.horizontal, spacing.lg)
                     .lineLimit(3...6)
 
                 // Action buttons
@@ -157,10 +191,11 @@ public struct DetailView: View {
                     }) {
                         VStack(spacing: 8) {
                             Circle()
-                                .fill(Color.primary)
+                                .fill(colors.dotBase)
                                 .frame(width: 40, height: 40)
                             Text("Just a dot")
-                                .font(.caption)
+                                .font(typography.caption)
+                                .foregroundStyle(colors.textSecondary)
                         }
                     }
                     .buttonStyle(.plain)
@@ -174,20 +209,23 @@ public struct DetailView: View {
                         }
                     }) {
                         Text("Add Note")
-                            .font(.headline)
-                            .foregroundStyle(.white)
+                            .font(typography.body)
+                            .foregroundStyle(colors.appBackground)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
-                            .background(newNoteText.isEmpty ? Color.gray : Color.blue)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .padding(.vertical, spacing.md)
+                            .background(newNoteText.isEmpty ? colors.textSecondary.opacity(0.3) : colors.accent)
+                            .clipShape(RoundedRectangle(cornerRadius: radii.md))
                     }
                     .disabled(newNoteText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, spacing.lg)
 
                 Spacer()
             }
             .padding(.top)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(colors.appBackground.ignoresSafeArea())
+            .foregroundStyle(colors.textPrimary)
             .navigationTitle("Add Experience")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
@@ -220,13 +258,24 @@ public struct DetailView: View {
 struct ExperienceRow: View {
     let experience: ExperienceRecord
     @State private var showingFullPhoto: Bool = false
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
 
     var body: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+        let spacing = tokens.spacing
+        let radii = tokens.radii
+
         HStack(alignment: .top, spacing: 12) {
             // Type icon
             Image(systemName: iconName)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(typography.body)
+                .foregroundStyle(colors.textSecondary)
                 .frame(width: 24)
 
             // Content
@@ -235,11 +284,11 @@ struct ExperienceRow: View {
 
                 // Moment type label - visible by default
                 Text(experience.momentType.displayName)
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(Color.primary.opacity(0.05))
+                    .font(typography.caption)
+                    .foregroundStyle(colors.textSecondary.opacity(0.7))
+                    .padding(.horizontal, spacing.sm)
+                    .padding(.vertical, spacing.xs / 2)
+                    .background(colors.dotBase.opacity(0.08))
                     .clipShape(Capsule())
             }
 
@@ -247,8 +296,8 @@ struct ExperienceRow: View {
 
             // Timestamp
             Text(timeString)
-                .font(.caption)
-                .foregroundStyle(.tertiary)
+                .font(typography.caption)
+                .foregroundStyle(colors.textSecondary.opacity(0.7))
         }
         .padding(.vertical, 4)
         #if os(iOS)
@@ -277,23 +326,28 @@ struct ExperienceRow: View {
 
     @ViewBuilder
     private var contentView: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+        let radii = tokens.radii
+
         switch experience.experienceType {
         case .note:
             if let text = experience.noteText {
                 Text(text)
-                    .font(.body)
+                    .font(typography.body)
+                    .foregroundStyle(colors.textPrimary)
             }
         case .link:
             if let url = experience.linkURL {
                 Link(destination: url) {
                     HStack(spacing: 4) {
                         Text(url.host ?? url.absoluteString)
-                            .font(.body)
-                            .foregroundStyle(.blue)
+                            .font(typography.body)
+                            .foregroundStyle(colors.accent)
                             .lineLimit(1)
                         Image(systemName: "arrow.up.right.square")
-                            .font(.caption)
-                            .foregroundStyle(.blue)
+                            .font(typography.caption)
+                            .foregroundStyle(colors.accent)
                     }
                 }
             }
@@ -306,25 +360,25 @@ struct ExperienceRow: View {
             } else if experience.photoLocalPath != nil {
                 // Fallback if no thumbnail
                 Rectangle()
-                    .fill(Color.gray.opacity(0.2))
+                    .fill(colors.textSecondary.opacity(0.2))
                     .frame(width: 80, height: 80)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .clipShape(RoundedRectangle(cornerRadius: radii.sm))
                     .overlay {
                         Image(systemName: "photo")
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(colors.textSecondary)
                     }
                     .onTapGesture {
                         showingFullPhoto = true
                     }
             } else {
                 Text("Photo")
-                    .font(.body)
-                    .foregroundStyle(.secondary)
+                    .font(typography.body)
+                    .foregroundStyle(colors.textSecondary)
             }
         case .dot:
             Text("Moment")
-                .font(.body)
-                .foregroundStyle(.secondary)
+                .font(typography.body)
+                .foregroundStyle(colors.textSecondary)
                 .italic()
         }
     }
@@ -342,22 +396,32 @@ struct ExperienceRow: View {
 struct PhotoThumbnailView: View {
     let thumbnailPath: String
     @State private var image: Image?
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
 
     var body: some View {
+        let colors = tokens.colors
+        let radii = tokens.radii
+
         Group {
             if let image = image {
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 80, height: 80)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .clipShape(RoundedRectangle(cornerRadius: radii.sm))
             } else {
                 Rectangle()
-                    .fill(Color.gray.opacity(0.2))
+                    .fill(colors.textSecondary.opacity(0.2))
                     .frame(width: 80, height: 80)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .clipShape(RoundedRectangle(cornerRadius: radii.sm))
                     .overlay {
                         ProgressView()
+                            .tint(colors.accent)
                     }
             }
         }
@@ -385,11 +449,19 @@ struct PhotoFullScreenView: View {
     let photoPath: String
     let onDismiss: () -> Void
     @State private var image: Image?
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
 
     var body: some View {
+        let colors = tokens.colors
+
         NavigationView {
             ZStack {
-                Color.black.ignoresSafeArea()
+                colors.appBackground.ignoresSafeArea()
 
                 if let image = image {
                     image
@@ -398,7 +470,7 @@ struct PhotoFullScreenView: View {
                 } else {
                     ProgressView()
                         .progressViewStyle(.circular)
-                        .tint(.white)
+                        .tint(colors.textPrimary)
                 }
             }
             #if os(iOS)
@@ -408,7 +480,7 @@ struct PhotoFullScreenView: View {
                     Button("Done") {
                         onDismiss()
                     }
-                    .foregroundStyle(.white)
+                    .foregroundStyle(colors.textPrimary)
                 }
             }
             .toolbarBackground(.hidden, for: .navigationBar)
@@ -418,7 +490,7 @@ struct PhotoFullScreenView: View {
                     Button("Done") {
                         onDismiss()
                     }
-                    .foregroundStyle(.white)
+                    .foregroundStyle(colors.textPrimary)
                 }
             }
             #endif
@@ -486,3 +558,235 @@ private func loadImage(from url: URL) async -> Image? {
     }
 }
 #endif
+
+// MARK: - Detail View for Push Navigation
+
+/// Detail view designed for push navigation (no NavigationView wrapper, no Done button).
+/// Used when presenting from UINavigationController.
+public struct DetailViewForPush: View {
+    @ObservedObject private var viewModel: DetailViewModel
+    let onRefreshNeeded: () -> Void
+
+    @State private var newNoteText: String = ""
+    @State private var selectedMomentType: MomentType = .now
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
+
+    public init(
+        viewModel: DetailViewModel,
+        onRefreshNeeded: @escaping () -> Void
+    ) {
+        self._viewModel = ObservedObject(wrappedValue: viewModel)
+        self.onRefreshNeeded = onRefreshNeeded
+    }
+
+    public var body: some View {
+        let colors = tokens.colors
+
+        ZStack {
+            if viewModel.isLoading && viewModel.experiences.isEmpty {
+                loadingView
+            } else if viewModel.experiences.isEmpty {
+                emptyState
+            } else {
+                experienceList
+            }
+        }
+        .background(colors.appBackground.ignoresSafeArea())
+        .foregroundStyle(colors.textPrimary)
+        .sheet(isPresented: $viewModel.showingAddSheet) {
+            addExperienceSheet
+        }
+        .tint(colors.accent)
+        .task {
+            await viewModel.loadExperiences()
+        }
+    }
+
+    // MARK: - Experience List
+
+    private var experienceList: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
+        return List {
+            ForEach(viewModel.experiences) { experience in
+                ExperienceRow(experience: experience)
+            }
+
+            // Add button at bottom
+            Section {
+                Button(action: { viewModel.showAdd() }) {
+                    Label("Add an experience", systemImage: "plus.circle")
+                        .foregroundStyle(colors.accent)
+                        .font(typography.body)
+                }
+            }
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(colors.appBackground)
+        .refreshable {
+            await viewModel.loadExperiences()
+        }
+    }
+
+    // MARK: - Empty State
+
+    private var emptyState: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
+        return VStack(spacing: 24) {
+            Image(systemName: "circle.dotted")
+                .font(.system(size: 60))
+                .foregroundStyle(colors.textSecondary)
+
+            Text("No experiences yet")
+                .font(typography.title)
+                .foregroundStyle(colors.textSecondary)
+
+            Text("Add something to remember this moment")
+                .font(typography.body)
+                .foregroundStyle(colors.textSecondary.opacity(0.7))
+                .multilineTextAlignment(.center)
+
+            Button(action: { viewModel.showAdd() }) {
+                Label("Add an experience", systemImage: "plus.circle.fill")
+                    .font(typography.body)
+                    .foregroundStyle(colors.appBackground)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
+                    .background(colors.accent)
+                    .clipShape(Capsule())
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    // MARK: - Loading
+
+    private var loadingView: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
+        return VStack(spacing: 12) {
+            ProgressView()
+                .tint(colors.accent)
+            Text("Loading...")
+                .font(typography.caption)
+                .foregroundStyle(colors.textSecondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    // MARK: - Add Sheet
+
+    private var addExperienceSheet: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+        let spacing = tokens.spacing
+        let radii = tokens.radii
+
+        return NavigationView {
+            VStack(spacing: 24) {
+                // Moment type picker
+                Picker("Moment", selection: $selectedMomentType) {
+                    ForEach(MomentType.allCases, id: \.self) { type in
+                        Text(type.displayName).tag(type)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, spacing.lg)
+
+                // Note input
+                TextField("What are you appreciating?", text: $newNoteText, axis: .vertical)
+                    .textFieldStyle(.plain)
+                    .font(typography.body)
+                    .foregroundStyle(colors.textPrimary)
+                    .padding(spacing.lg)
+                    .background(colors.surface)
+                    .clipShape(RoundedRectangle(cornerRadius: radii.md))
+                    .padding(.horizontal, spacing.lg)
+                    .lineLimit(3...6)
+
+                // Action buttons
+                HStack(spacing: 16) {
+                    // Quick dot button
+                    Button(action: {
+                        Task {
+                            await viewModel.addDot(momentType: selectedMomentType)
+                            viewModel.hideAdd()
+                            onRefreshNeeded()
+                        }
+                    }) {
+                        VStack(spacing: 8) {
+                            Circle()
+                                .fill(colors.dotBase)
+                                .frame(width: 40, height: 40)
+                            Text("Just a dot")
+                                .font(typography.caption)
+                                .foregroundStyle(colors.textSecondary)
+                        }
+                    }
+                    .buttonStyle(.plain)
+
+                    // Add note button
+                    Button(action: {
+                        Task {
+                            await viewModel.addNote(newNoteText, momentType: selectedMomentType)
+                            newNoteText = ""
+                            viewModel.hideAdd()
+                            onRefreshNeeded()
+                        }
+                    }) {
+                        Text("Add Note")
+                            .font(typography.body)
+                            .foregroundStyle(colors.appBackground)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, spacing.md)
+                            .background(newNoteText.isEmpty ? colors.textSecondary.opacity(0.3) : colors.accent)
+                            .clipShape(RoundedRectangle(cornerRadius: radii.md))
+                    }
+                    .disabled(newNoteText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+                .padding(.horizontal, spacing.lg)
+
+                Spacer()
+            }
+            .padding(.top)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(colors.appBackground.ignoresSafeArea())
+            .foregroundStyle(colors.textPrimary)
+            .navigationTitle("Add Experience")
+            #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        newNoteText = ""
+                        viewModel.hideAdd()
+                    }
+                }
+            }
+            #else
+            .toolbar {
+                ToolbarItem {
+                    Button("Cancel") {
+                        newNoteText = ""
+                        viewModel.hideAdd()
+                    }
+                }
+            }
+            #endif
+        }
+        #if os(iOS)
+        .presentationDetents([.medium])
+        #endif
+    }
+}

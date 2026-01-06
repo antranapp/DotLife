@@ -1,8 +1,10 @@
 #if canImport(UIKit)
+import Combine
 import UIKit
 import SwiftUI
 import DotLifeUI
 import DotLifeDomain
+import DotLifeDS
 
 /// Horizontal pager that contains Capture and Visualize pages.
 public final class HorizontalPagerController: UIViewController {
@@ -18,6 +20,8 @@ public final class HorizontalPagerController: UIViewController {
         sv.alwaysBounceHorizontal = true
         sv.alwaysBounceVertical = false
         sv.translatesAutoresizingMaskIntoConstraints = false
+        // Prevent automatic content inset adjustments that can reset scroll position
+        sv.contentInsetAdjustmentBehavior = .never
         return sv
     }()
 
@@ -36,9 +40,17 @@ public final class HorizontalPagerController: UIViewController {
     /// Direction lock coordinator
     public var directionLock: DirectionLock?
 
+    /// Theme manager injected from AppKit
+    public var themeManager: ThemeManager?
+
     /// Child view controllers for each page
-    private var captureHostingController: UIHostingController<CaptureView>?
+    private var captureHostingController: UIViewController?
     private var visualizeController: VerticalPagerController?
+
+    private var themeObservation: AnyCancellable?
+    private var currentPage: Int = 0
+    private var pendingPage: Int?
+    private var didSetInitialPage = false
 
     // MARK: - Lifecycle
 
@@ -46,6 +58,21 @@ public final class HorizontalPagerController: UIViewController {
         super.viewDidLoad()
         setupScrollView()
         setupPages()
+        applyTheme()
+        observeThemeChanges()
+    }
+
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        applyTheme()
+    }
+
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if !didSetInitialPage {
+            syncCurrentPage()
+            didSetInitialPage = true
+        }
     }
 
     // MARK: - Setup
@@ -90,7 +117,7 @@ public final class HorizontalPagerController: UIViewController {
     private func setupCapturePage() {
         guard let viewModel = captureViewModel else {
             // Fallback to placeholder if no view model
-            let placeholder = UIHostingController(rootView: PlaceholderRootView())
+            let placeholder = makeHostingController(rootView: PlaceholderRootView())
             addChild(placeholder)
             contentView.addSubview(placeholder.view)
             placeholder.view.translatesAutoresizingMaskIntoConstraints = false
@@ -105,7 +132,7 @@ public final class HorizontalPagerController: UIViewController {
         }
 
         let captureView = CaptureView(viewModel: viewModel)
-        let hostingController = UIHostingController(rootView: captureView)
+        let hostingController = makeHostingController(rootView: captureView)
         captureHostingController = hostingController
 
         addChild(hostingController)
@@ -126,6 +153,7 @@ public final class HorizontalPagerController: UIViewController {
         let visualizeVC = VerticalPagerController()
         visualizeVC.directionLock = directionLock
         visualizeVC.visualizeViewModel = visualizeViewModel
+        visualizeVC.themeManager = themeManager
         visualizeController = visualizeVC
 
         // Update direction lock to use the vertical scroll view
@@ -157,7 +185,64 @@ public final class HorizontalPagerController: UIViewController {
     /// Scrolls to a specific page.
     public func scrollTo(page: Int, animated: Bool = true) {
         let x = CGFloat(page) * scrollView.bounds.width
+        if animated {
+            pendingPage = page
+        } else {
+            setCurrentPage(page)
+        }
         scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: animated)
+    }
+
+    // MARK: - Theme
+
+    private func observeThemeChanges() {
+        themeObservation = themeManager?.objectWillChange.sink { [weak self] _ in
+            self?.applyTheme()
+        }
+    }
+
+    private func applyTheme() {
+        guard let themeManager else { return }
+        overrideUserInterfaceStyle = themeManager.interfaceStyleOverride
+        captureHostingController?.overrideUserInterfaceStyle = themeManager.interfaceStyleOverride
+        visualizeController?.overrideUserInterfaceStyle = themeManager.interfaceStyleOverride
+        let colors = themeManager.uiColors(for: traitCollection.userInterfaceStyle)
+        view.backgroundColor = colors.appBackground
+        scrollView.backgroundColor = colors.appBackground
+        contentView.backgroundColor = colors.appBackground
+        captureHostingController?.view.backgroundColor = colors.appBackground
+        visualizeController?.view.backgroundColor = colors.appBackground
+    }
+
+    private func makeHostingController<Content: View>(rootView: Content) -> UIHostingController<AnyView> {
+        let resolvedView: AnyView
+        if let themeManager = themeManager {
+            resolvedView = AnyView(rootView.environmentObject(themeManager))
+        } else {
+            resolvedView = AnyView(rootView)
+        }
+        let hostingController = UIHostingController(rootView: resolvedView)
+        if let themeManager = themeManager {
+            hostingController.overrideUserInterfaceStyle = themeManager.interfaceStyleOverride
+            let colors = themeManager.uiColors(for: traitCollection.userInterfaceStyle)
+            hostingController.view.backgroundColor = colors.appBackground
+        } else {
+            hostingController.view.backgroundColor = .clear
+        }
+        return hostingController
+    }
+
+    private func setCurrentPage(_ page: Int) {
+        guard page != currentPage else { return }
+        currentPage = page
+        captureViewModel?.isCaptureActive = page == 0
+    }
+
+    private func syncCurrentPage() {
+        let width = scrollView.bounds.width
+        guard width > 0 else { return }
+        let page = Int(round(scrollView.contentOffset.x / width))
+        setCurrentPage(page)
     }
 
     // MARK: - Gesture Handling
@@ -182,16 +267,24 @@ public final class HorizontalPagerController: UIViewController {
 // MARK: - UIScrollViewDelegate
 
 extension HorizontalPagerController: UIScrollViewDelegate {
-    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        // Direction lock handled by gesture coordinator
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            syncCurrentPage()
+        }
     }
 
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        // Re-enable all scrolling when paging completes
+        syncCurrentPage()
         directionLock?.enableAllScrolling()
     }
 
     public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        if let page = pendingPage {
+            pendingPage = nil
+            setCurrentPage(page)
+        } else {
+            syncCurrentPage()
+        }
         directionLock?.enableAllScrolling()
     }
 }

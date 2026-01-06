@@ -1,5 +1,8 @@
 #if canImport(UIKit)
 import UIKit
+import os.log
+
+private let logger = Logger(subsystem: "app.antran.dotlife", category: "DirectionLock")
 
 /// Manages direction locking for nested scroll views.
 /// Prevents accidental cross-axis scrolling by locking to the first detected direction.
@@ -90,6 +93,7 @@ public final class DirectionLock: NSObject {
 
     /// Re-enables scrolling on both axes.
     public func enableAllScrolling() {
+        logger.debug("enableAllScrolling()")
         horizontalScrollView?.isScrollEnabled = true
         verticalScrollView?.isScrollEnabled = true
     }

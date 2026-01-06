@@ -1,5 +1,5 @@
 import SwiftUI
-import DotLifeDomain
+import DotLifeDS
 
 /// Default template string
 public let defaultTemplate = "I appreciate [experience] for [moment]"
@@ -57,14 +57,60 @@ public final class SettingsViewModel: ObservableObject {
 public struct SettingsView: View {
     @ObservedObject private var viewModel: SettingsViewModel
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
 
     public init(viewModel: SettingsViewModel) {
         self._viewModel = ObservedObject(wrappedValue: viewModel)
     }
 
     public var body: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+        let spacing = tokens.spacing
+
         NavigationView {
             Form {
+                Section {
+                    ForEach(themeManager.themes) { theme in
+                        Button(action: { themeManager.selectTheme(theme) }) {
+                            ThemeRow(
+                                theme: theme,
+                                isSelected: theme.id == themeManager.selectedTheme.id,
+                                previewScheme: themeManager.resolvedScheme(system: colorScheme),
+                                textColors: colors,
+                                spacing: spacing,
+                                radii: tokens.radii
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.vertical, spacing.xs)
+                    }
+                } header: {
+                    Text("Theme")
+                        .font(typography.caption)
+                } footer: {
+                    Text("Default: Paper & Ink")
+                        .font(typography.caption)
+                        .foregroundStyle(colors.textSecondary)
+                }
+
+                Section {
+                    Picker("Appearance", selection: $themeManager.appearanceOverride) {
+                        ForEach(ThemeAppearanceOverride.allCases) { override in
+                            Text(override.displayName).tag(override)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                } header: {
+                    Text("Appearance")
+                        .font(typography.caption)
+                }
+
                 Section {
                     TemplateEditorView(viewModel: viewModel)
                 } header: {
@@ -73,7 +119,7 @@ public struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Customize how you express gratitude.")
                         Text("Must include [moment] and [experience] placeholders.")
-                            .foregroundStyle(viewModel.isTemplateValid ? Color.secondary : Color.red)
+                            .foregroundStyle(viewModel.isTemplateValid ? colors.textSecondary : colors.accent)
                     }
                 }
 
@@ -81,7 +127,7 @@ public struct SettingsView: View {
                     Button("Reset to Default") {
                         viewModel.resetToDefault()
                     }
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(colors.accent)
                 }
 
                 Section {
@@ -89,12 +135,16 @@ public struct SettingsView: View {
                         Text("Version")
                         Spacer()
                         Text("1.0.0")
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(colors.textSecondary)
                     }
                 } header: {
                     Text("About")
                 }
             }
+            .tint(colors.accent)
+            .foregroundStyle(colors.textPrimary)
+            .scrollContentBackground(.hidden)
+            .background(colors.appBackground.ignoresSafeArea())
             .navigationTitle("Settings")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
@@ -118,16 +168,84 @@ public struct SettingsView: View {
     }
 }
 
+private struct ThemeRow: View {
+    let theme: Theme
+    let isSelected: Bool
+    let previewScheme: ThemeColorScheme
+    let textColors: ThemeColors
+    let spacing: ThemeSpacing
+    let radii: ThemeRadii
+
+    var body: some View {
+        let previewColors = theme.palette.colors(for: previewScheme)
+
+        HStack(spacing: spacing.md) {
+            ThemePalettePreview(colors: previewColors, radii: radii)
+
+            Text(theme.name)
+                .foregroundStyle(textColors.textPrimary)
+
+            Spacer()
+
+            if isSelected {
+                Image(systemName: "checkmark")
+                    .foregroundStyle(textColors.accent)
+            }
+        }
+        .padding(.vertical, spacing.xs)
+    }
+}
+
+private struct ThemePalettePreview: View {
+    let colors: ThemeColors
+    let radii: ThemeRadii
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Circle()
+                .fill(colors.appBackground)
+                .frame(width: 12, height: 12)
+            Circle()
+                .fill(colors.surface)
+                .frame(width: 12, height: 12)
+            Circle()
+                .fill(colors.accent)
+                .frame(width: 12, height: 12)
+            Circle()
+                .fill(colors.dotBase)
+                .frame(width: 12, height: 12)
+        }
+        .padding(4)
+        .background(colors.surface)
+        .clipShape(RoundedRectangle(cornerRadius: radii.sm))
+        .overlay(
+            RoundedRectangle(cornerRadius: radii.sm)
+                .stroke(colors.textSecondary.opacity(0.2), lineWidth: 1)
+        )
+    }
+}
+
 /// Template editor with live preview and validation
 struct TemplateEditorView: View {
     @ObservedObject var viewModel: SettingsViewModel
     @FocusState private var isFocused: Bool
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
 
     var body: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
         VStack(alignment: .leading, spacing: 12) {
             // Editor
             TextField("Template", text: $viewModel.templateText, axis: .vertical)
                 .textFieldStyle(.plain)
+                .font(typography.body)
+                .foregroundStyle(colors.textPrimary)
                 .lineLimit(2...4)
                 .focused($isFocused)
 
@@ -135,20 +253,20 @@ struct TemplateEditorView: View {
             if let error = viewModel.validationError {
                 HStack(spacing: 4) {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.red)
-                        .font(.caption)
+                        .foregroundStyle(colors.accent)
+                        .font(typography.caption)
                     Text(error)
-                        .font(.caption)
-                        .foregroundStyle(.red)
+                        .font(typography.caption)
+                        .foregroundStyle(colors.accent)
                 }
             } else {
                 HStack(spacing: 4) {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
-                        .font(.caption)
+                        .foregroundStyle(colors.textSecondary)
+                        .font(typography.caption)
                     Text("Template is valid")
-                        .font(.caption)
-                        .foregroundStyle(.green)
+                        .font(typography.caption)
+                        .foregroundStyle(colors.textSecondary)
                 }
             }
 
@@ -156,8 +274,8 @@ struct TemplateEditorView: View {
             Divider()
 
             Text("Preview")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(typography.caption)
+                .foregroundStyle(colors.textSecondary)
 
             TemplatePreview(template: viewModel.templateText)
         }
@@ -167,24 +285,34 @@ struct TemplateEditorView: View {
 /// Preview of the template with highlighted placeholders
 struct TemplatePreview: View {
     let template: String
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
 
     var body: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
         HStack(spacing: 4) {
             ForEach(parseTemplate(), id: \.self) { segment in
                 if segment == "[experience]" {
                     Text("note")
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(colors.accent)
                         .underline()
                 } else if segment == "[moment]" {
                     Text("now")
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(colors.accent)
                         .underline()
                 } else {
                     Text(segment)
+                        .foregroundStyle(colors.textPrimary)
                 }
             }
         }
-        .font(.body)
+        .font(typography.body)
     }
 
     private func parseTemplate() -> [String] {

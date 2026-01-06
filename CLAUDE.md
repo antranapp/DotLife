@@ -1,4 +1,4 @@
-# DotLife project instructions
+## Project Structure
 
 - Target iOS 17+; use modern Swift and Swift concurrency where appropriate.
 - Follow `documents/DotLife_Moments_MVP_PRD.md` and `documents/DotLife_Technical_Design_Tuist_SPM.md`.
@@ -32,3 +32,7 @@ Screen size: 402x874 (iPhone 17 Pro). Use center Y (~437) for horizontal swipes.
 | Swipe up (→ Week view) | `swipe x1:200 y1:600 x2:200 y2:200 duration:0.3` |
 | Swipe down (→ Today view) | `swipe x1:200 y1:200 x2:200 y2:600 duration:0.3` |
 | Verify state | `screenshot` |
+
+## Plan mode
+
+-  Present the question in multiple choice style and enummarate the question and answer for easy answering

@@ -1,9 +1,16 @@
 import SwiftUI
 import DotLifeDomain
+import DotLifeDS
 
 /// Grid view showing the current day at various zoom scales.
 public struct TodayGridView: View {
     @ObservedObject private var viewModel: VisualizeViewModel
+    @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var tokens: ThemeTokens {
+        themeManager.tokens(for: colorScheme)
+    }
 
     public init(viewModel: VisualizeViewModel) {
         self._viewModel = ObservedObject(wrappedValue: viewModel)
@@ -34,18 +41,22 @@ public struct TodayGridView: View {
     }
 
     public var body: some View {
+        let colors = tokens.colors
+        let typography = tokens.typography
+        let spacing = tokens.spacing
+
         VStack(spacing: 20) {
             // Header with scale indicator
             VStack(spacing: 4) {
                 Text(headerText)
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
+                    .font(typography.title)
+                    .foregroundStyle(colors.textSecondary)
 
                 Text(scaleLabel)
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                    .font(typography.caption)
+                    .foregroundStyle(colors.textSecondary.opacity(0.7))
             }
-            .padding(.top, 20)
+            .padding(.top, spacing.xl)
 
             // Grid with zoom gesture
             if viewModel.todaySummaries.isEmpty {
@@ -61,7 +72,7 @@ public struct TodayGridView: View {
                         )
                     }
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, spacing.lg)
                 .frame(maxWidth: .infinity)
                 .pinchToZoom(controller: viewModel.todayZoomController)
             }
@@ -70,35 +81,21 @@ public struct TodayGridView: View {
 
             // Hint
             Text("Swipe down for This Week")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-                .padding(.bottom, 20)
+                .font(typography.caption)
+                .foregroundStyle(colors.textSecondary.opacity(0.7))
+                .padding(.bottom, spacing.xl)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .foregroundStyle(colors.textPrimary)
+        .background(colors.appBackground.ignoresSafeArea())
         .onAppear {
             Task {
                 await viewModel.refreshTodayData()
             }
         }
-        #if os(iOS)
-        .fullScreenCover(isPresented: $viewModel.showingDetail) {
-            if let detailVM = viewModel.makeDetailViewModel() {
-                DetailView(
-                    viewModel: detailVM,
-                    onDismiss: { viewModel.closeDetail() }
-                )
-            }
-        }
-        #else
-        .sheet(isPresented: $viewModel.showingDetail) {
-            if let detailVM = viewModel.makeDetailViewModel() {
-                DetailView(
-                    viewModel: detailVM,
-                    onDismiss: { viewModel.closeDetail() }
-                )
-            }
-        }
-        #endif
+        // NOTE: Detail presentation is handled at UIKit level (RootViewController)
+        // to avoid scroll view interference when modal dismisses.
+        // See VisualizeViewModel.onPresentDetail callback.
     }
 
     private var headerText: String {
@@ -147,11 +144,15 @@ public struct TodayGridView: View {
     }
 
     private var emptyState: some View {
-        VStack(spacing: 12) {
+        let colors = tokens.colors
+        let typography = tokens.typography
+
+        return VStack(spacing: 12) {
             ProgressView()
+                .tint(colors.accent)
             Text("Loading...")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(typography.caption)
+                .foregroundStyle(colors.textSecondary)
         }
         .frame(maxWidth: .infinity, maxHeight: 300)
     }
