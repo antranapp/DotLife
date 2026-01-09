@@ -6,6 +6,7 @@ public final class ThemeManager: ObservableObject {
     private enum StorageKeys {
         static let selectedThemeId = "dotlife.theme.selected"
         static let appearanceOverride = "dotlife.theme.appearanceOverride"
+        static let fontDesign = "dotlife.theme.fontDesign"
     }
 
     @Published public var selectedThemeId: String {
@@ -20,7 +21,16 @@ public final class ThemeManager: ObservableObject {
         }
     }
 
-    public let typography: ThemeTypography
+    @Published public private(set) var fontDesign: FontDesign {
+        didSet {
+            _typography = ThemeTypography.withDesign(fontDesign)
+            persistFontDesign()
+        }
+    }
+
+    private var _typography: ThemeTypography
+    public var typography: ThemeTypography { _typography }
+
     public let spacing: ThemeSpacing
     public let radii: ThemeRadii
 
@@ -28,20 +38,30 @@ public final class ThemeManager: ObservableObject {
 
     public init(
         userDefaults: UserDefaults = .standard,
-        typography: ThemeTypography = .standard,
+        defaultFontDesign: FontDesign = .monospaced,
         spacing: ThemeSpacing = .standard,
         radii: ThemeRadii = .standard
     ) {
         self.userDefaults = userDefaults
-        self.typography = typography
         self.spacing = spacing
         self.radii = radii
+
+        // Load font design from storage or use default (monospaced)
+        let storedFontDesign = userDefaults.string(forKey: StorageKeys.fontDesign)
+        let loadedFontDesign = FontDesign(rawValue: storedFontDesign ?? "") ?? defaultFontDesign
+        self.fontDesign = loadedFontDesign
+        self._typography = ThemeTypography.withDesign(loadedFontDesign)
 
         let storedThemeId = userDefaults.string(forKey: StorageKeys.selectedThemeId)
         self.selectedThemeId = storedThemeId ?? Theme.defaultTheme.id
 
         let storedOverride = userDefaults.string(forKey: StorageKeys.appearanceOverride)
         self.appearanceOverride = ThemeAppearanceOverride(rawValue: storedOverride ?? "") ?? .system
+    }
+
+    /// Changes the font design for the app
+    public func setFontDesign(_ design: FontDesign) {
+        fontDesign = design
     }
 
     public var themes: [Theme] {
@@ -125,5 +145,9 @@ public final class ThemeManager: ObservableObject {
 
     private func persistAppearanceOverride() {
         userDefaults.set(appearanceOverride.rawValue, forKey: StorageKeys.appearanceOverride)
+    }
+
+    private func persistFontDesign() {
+        userDefaults.set(fontDesign.rawValue, forKey: StorageKeys.fontDesign)
     }
 }

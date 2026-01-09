@@ -204,6 +204,14 @@ public protocol ExperienceRepository: Sendable {
 
     /// Returns the count of experiences within a time bucket.
     func count(in bucket: TimeBucket) async throws -> Int
+
+    /// Returns a dictionary mapping dates to experience counts for a date range.
+    /// Used for year visualization grid.
+    /// - Parameters:
+    ///   - startDate: Start of the date range (inclusive)
+    ///   - endDate: End of the date range (inclusive)
+    /// - Returns: Dictionary with date keys (start of day) and count values
+    func experienceCountsByDay(from startDate: Date, to endDate: Date) async throws -> [Date: Int]
 }
 
 // MARK: - Repository Errors
