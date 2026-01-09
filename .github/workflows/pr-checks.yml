@@ -106,7 +106,7 @@ jobs:
       - name: Run Maestro tests
         run: |
           export PATH="$HOME/.maestro/bin:$PATH"
-          maestro test .maestro/
+          maestro test .maestro/flows/
 
       - name: Upload Maestro test results
         if: always()
