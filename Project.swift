@@ -15,6 +15,22 @@ let project = Project(
             dependencies: [
                 .external(name: "DotLifeAppKit")
             ]
+        ),
+        .target(
+            name: "DotLifeAppTests",
+            destinations: .iOS,
+            product: .unitTests,
+            bundleId: "app.antran.dotlife.tests",
+            deploymentTargets: .iOS("17.0"),
+            sources: [
+                "Packages/DotLifeUI/Tests/DotLifeUITests/**",
+                "Packages/DotLifeDomain/Tests/DotLifeDomainTests/**"
+            ],
+            dependencies: [
+                .target(name: "DotLifeApp"),
+                .external(name: "DotLifeUI"),
+                .external(name: "DotLifeDomain")
+            ]
         )
     ]
 )

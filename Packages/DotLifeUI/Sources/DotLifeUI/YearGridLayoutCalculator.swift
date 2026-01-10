@@ -75,8 +75,14 @@ public struct YearGridLayoutCalculator {
             )
         }
 
+        // Apply safety margin to available space to account for floating point errors
+        // and any internal padding that SwiftUI's LazyVGrid might add
+        let safetyMargin: CGFloat = 2.0
+        let safeWidth = availableWidth - safetyMargin
+        let safeHeight = availableHeight - safetyMargin
+
         // Calculate optimal columns based on aspect ratio
-        let aspectRatio = availableHeight / availableWidth
+        let aspectRatio = safeHeight / safeWidth
 
         // For dayCount items arranged in C columns and R rows:
         // R = ceil(dayCount / C)
@@ -99,43 +105,24 @@ public struct YearGridLayoutCalculator {
         let horizontalDivisor = CGFloat(columns) + CGFloat(columns - 1) * spacingRatio
         let verticalDivisor = CGFloat(rows) + CGFloat(rows - 1) * spacingRatio
 
-        let dotSizeFromWidth = availableWidth / horizontalDivisor
-        let dotSizeFromHeight = availableHeight / verticalDivisor
+        let dotSizeFromWidth = safeWidth / horizontalDivisor
+        let dotSizeFromHeight = safeHeight / verticalDivisor
 
         // Use the smaller dot size to ensure everything fits
-        // Apply a small safety margin (0.99) to prevent floating point rounding issues
-        let dotSize = floor(min(dotSizeFromWidth, dotSizeFromHeight) * 100) / 100
-        let baseSpacing = dotSize * spacingRatio
+        // Floor to nearest 0.5 to avoid floating point accumulation errors
+        let rawDotSize = min(dotSizeFromWidth, dotSizeFromHeight)
+        let dotSize = floor(rawDotSize * 2) / 2
 
-        // Calculate actual used dimensions
-        let usedWidth = CGFloat(columns) * dotSize + CGFloat(columns - 1) * baseSpacing
-        let usedHeight = CGFloat(rows) * dotSize + CGFloat(rows - 1) * baseSpacing
-
-        // Distribute extra space evenly to spacing
-        let extraHorizontal = availableWidth - usedWidth
-        let extraVertical = availableHeight - usedHeight
-
-        let actualHorizontalSpacing: CGFloat
-        let actualVerticalSpacing: CGFloat
-
-        if columns > 1 {
-            actualHorizontalSpacing = baseSpacing + (extraHorizontal / CGFloat(columns - 1))
-        } else {
-            actualHorizontalSpacing = baseSpacing
-        }
-
-        if rows > 1 {
-            actualVerticalSpacing = baseSpacing + (extraVertical / CGFloat(rows - 1))
-        } else {
-            actualVerticalSpacing = baseSpacing
-        }
+        // Use consistent spacing based on dot size (don't distribute extra space)
+        // This ensures the total height calculation is predictable
+        let spacing = floor(dotSize * spacingRatio * 2) / 2
 
         return YearGridLayout(
             columns: columns,
             rows: rows,
             dotSize: dotSize,
-            horizontalSpacing: actualHorizontalSpacing,
-            verticalSpacing: actualVerticalSpacing
+            horizontalSpacing: spacing,
+            verticalSpacing: spacing
         )
     }
 

@@ -40,11 +40,14 @@ public extension YearDay {
     ///   - year: The calendar year (e.g., 2026)
     ///   - experienceCounts: Dictionary mapping dates to experience counts
     ///   - calendar: Calendar to use for date calculations
+    ///   - referenceDate: The date to use as "today" for isToday/isFuture calculations.
+    ///                    Defaults to the current date. Pass a custom date for testing.
     /// - Returns: Array of YearDay structs for each day in the year
     static func generateYear(
         _ year: Int,
         experienceCounts: [Date: Int],
-        calendar: Calendar = .current
+        calendar: Calendar = .current,
+        referenceDate: Date = Date()
     ) -> [YearDay] {
         guard let startOfYear = calendar.date(from: DateComponents(year: year, month: 1, day: 1)),
               let endOfYear = calendar.date(from: DateComponents(year: year, month: 12, day: 31))
@@ -52,7 +55,7 @@ public extension YearDay {
             return []
         }
 
-        let today = calendar.startOfDay(for: Date())
+        let today = calendar.startOfDay(for: referenceDate)
         var days: [YearDay] = []
         var currentDate = startOfYear
 
@@ -79,11 +82,18 @@ public extension YearDay {
     }
 
     /// Generates all days for the current calendar year.
+    /// - Parameters:
+    ///   - experienceCounts: Dictionary mapping dates to experience counts
+    ///   - calendar: Calendar to use for date calculations
+    ///   - referenceDate: The date to use as "today" for isToday/isFuture calculations.
+    ///                    Defaults to the current date. Pass a custom date for testing.
+    /// - Returns: Array of YearDay structs for each day in the year
     static func generateCurrentYear(
         experienceCounts: [Date: Int],
-        calendar: Calendar = .current
+        calendar: Calendar = .current,
+        referenceDate: Date = Date()
     ) -> [YearDay] {
-        let year = calendar.component(.year, from: Date())
-        return generateYear(year, experienceCounts: experienceCounts, calendar: calendar)
+        let year = calendar.component(.year, from: referenceDate)
+        return generateYear(year, experienceCounts: experienceCounts, calendar: calendar, referenceDate: referenceDate)
     }
 }

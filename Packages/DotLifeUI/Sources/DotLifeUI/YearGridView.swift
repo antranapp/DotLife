@@ -10,6 +10,7 @@ public struct YearGridView: View {
     @EnvironmentObject private var themeManager: ThemeManager
     @Environment(\.colorScheme) private var colorScheme
     @State private var currentDate = Date()
+    @State private var currentDay: Int
 
     private var tokens: ThemeTokens {
         themeManager.tokens(for: colorScheme)
@@ -24,8 +25,13 @@ public struct YearGridView: View {
     /// Timer to update the current time
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
+    /// Calendar for day comparison
+    private let calendar = Calendar.current
+
     public init(viewModel: YearViewModel) {
         self.viewModel = viewModel
+        // Initialize currentDay with today's day of year
+        self._currentDay = State(initialValue: Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 1)
     }
 
     /// Layout calculator for consistent grid sizing
@@ -79,6 +85,16 @@ public struct YearGridView: View {
         }
         .onReceive(timer) { date in
             currentDate = date
+
+            // Check if the day has changed (midnight passed)
+            let newDay = calendar.ordinality(of: .day, in: .year, for: date) ?? 1
+            if newDay != currentDay {
+                currentDay = newDay
+                // Refresh data to update isToday/isFuture flags for all days
+                Task {
+                    await viewModel.refresh()
+                }
+            }
         }
     }
 

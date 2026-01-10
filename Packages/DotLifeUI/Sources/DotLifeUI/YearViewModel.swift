@@ -24,14 +24,19 @@ public final class YearViewModel: ObservableObject {
 
     private let calendar: Calendar
 
+    /// Provider for the current date. Allows injection for testing.
+    private let dateProvider: () -> Date
+
     // MARK: - Initialization
 
     public init(
         repository: any DotLifeDomain.ExperienceRepository,
-        calendar: Calendar = .current
+        calendar: Calendar = .current,
+        dateProvider: @escaping () -> Date = { Date() }
     ) {
         self.repository = repository
         self.calendar = calendar
+        self.dateProvider = dateProvider
     }
 
     // MARK: - Actions
@@ -41,7 +46,8 @@ public final class YearViewModel: ObservableObject {
         logger.debug("refresh() START")
         isLoading = true
 
-        let year = calendar.component(.year, from: Date())
+        let currentDate = dateProvider()
+        let year = calendar.component(.year, from: currentDate)
 
         guard let startOfYear = calendar.date(from: DateComponents(year: year, month: 1, day: 1)),
               let endOfYear = calendar.date(from: DateComponents(year: year, month: 12, day: 31, hour: 23, minute: 59, second: 59))
@@ -53,7 +59,7 @@ public final class YearViewModel: ObservableObject {
 
         do {
             let experienceCounts = try await repository.experienceCountsByDay(from: startOfYear, to: endOfYear)
-            let days = YearDay.generateYear(year, experienceCounts: experienceCounts, calendar: calendar)
+            let days = YearDay.generateYear(year, experienceCounts: experienceCounts, calendar: calendar, referenceDate: currentDate)
 
             await MainActor.run {
                 self.yearDays = days
@@ -64,7 +70,7 @@ public final class YearViewModel: ObservableObject {
         } catch {
             logger.error("refresh() failed: \(error.localizedDescription)")
             // Generate empty year on failure
-            let days = YearDay.generateYear(year, experienceCounts: [:], calendar: calendar)
+            let days = YearDay.generateYear(year, experienceCounts: [:], calendar: calendar, referenceDate: currentDate)
             await MainActor.run {
                 self.yearDays = days
                 self.isLoading = false

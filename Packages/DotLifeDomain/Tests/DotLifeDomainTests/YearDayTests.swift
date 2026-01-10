@@ -216,3 +216,131 @@ import Foundation
     }
     #expect(feb29 == nil)
 }
+
+// MARK: - Day Change / Midnight Tests
+
+@Test func generateYearWithCustomReferenceDate() {
+    let calendar = Calendar.current
+    // Use a specific date as "today"
+    let customToday = calendar.date(from: DateComponents(year: 2026, month: 6, day: 15))!
+
+    let yearDays = YearDay.generateYear(2026, experienceCounts: [:], calendar: calendar, referenceDate: customToday)
+
+    // Find the day marked as today
+    let todayDays = yearDays.filter { $0.isToday }
+    #expect(todayDays.count == 1)
+
+    if let todayDay = todayDays.first {
+        let components = calendar.dateComponents([.month, .day], from: todayDay.date)
+        #expect(components.month == 6)
+        #expect(components.day == 15)
+    }
+}
+
+@Test func dayChangeUpdatesIsTodayFlag() {
+    let calendar = Calendar.current
+
+    // Day 1: January 10 is "today"
+    let day1Today = calendar.date(from: DateComponents(year: 2026, month: 1, day: 10))!
+    let yearDaysDay1 = YearDay.generateYear(2026, experienceCounts: [:], calendar: calendar, referenceDate: day1Today)
+
+    // Find Jan 10 and Jan 11 in first generation
+    let jan10Day1 = yearDaysDay1.first { day in
+        let components = calendar.dateComponents([.month, .day], from: day.date)
+        return components.month == 1 && components.day == 10
+    }
+    let jan11Day1 = yearDaysDay1.first { day in
+        let components = calendar.dateComponents([.month, .day], from: day.date)
+        return components.month == 1 && components.day == 11
+    }
+
+    // On Jan 10: Jan 10 is today, Jan 11 is future
+    #expect(jan10Day1?.isToday == true)
+    #expect(jan10Day1?.isFuture == false)
+    #expect(jan11Day1?.isToday == false)
+    #expect(jan11Day1?.isFuture == true)
+
+    // Day 2: After midnight, January 11 is "today"
+    let day2Today = calendar.date(from: DateComponents(year: 2026, month: 1, day: 11))!
+    let yearDaysDay2 = YearDay.generateYear(2026, experienceCounts: [:], calendar: calendar, referenceDate: day2Today)
+
+    // Find Jan 10 and Jan 11 in second generation
+    let jan10Day2 = yearDaysDay2.first { day in
+        let components = calendar.dateComponents([.month, .day], from: day.date)
+        return components.month == 1 && components.day == 10
+    }
+    let jan11Day2 = yearDaysDay2.first { day in
+        let components = calendar.dateComponents([.month, .day], from: day.date)
+        return components.month == 1 && components.day == 11
+    }
+
+    // After midnight: Jan 10 is no longer today (past day), Jan 11 is now today
+    #expect(jan10Day2?.isToday == false, "Jan 10 should no longer be today after midnight")
+    #expect(jan10Day2?.isFuture == false, "Jan 10 should be a past day")
+    #expect(jan11Day2?.isToday == true, "Jan 11 should now be today")
+    #expect(jan11Day2?.isFuture == false, "Jan 11 should not be future (it's today)")
+}
+
+@Test func dayChangeOnlyOneTodayExists() {
+    let calendar = Calendar.current
+
+    // Test multiple days to ensure only one is marked as today
+    let testDates = [
+        calendar.date(from: DateComponents(year: 2026, month: 1, day: 1))!,
+        calendar.date(from: DateComponents(year: 2026, month: 6, day: 15))!,
+        calendar.date(from: DateComponents(year: 2026, month: 12, day: 31))!
+    ]
+
+    for referenceDate in testDates {
+        let yearDays = YearDay.generateYear(2026, experienceCounts: [:], calendar: calendar, referenceDate: referenceDate)
+        let todayCount = yearDays.filter { $0.isToday }.count
+        #expect(todayCount == 1, "Should have exactly one today for reference date \(referenceDate)")
+    }
+}
+
+@Test func dayChangeFutureDaysUpdateCorrectly() {
+    let calendar = Calendar.current
+
+    // Reference: June 15
+    let june15 = calendar.date(from: DateComponents(year: 2026, month: 6, day: 15))!
+    let yearDays = YearDay.generateYear(2026, experienceCounts: [:], calendar: calendar, referenceDate: june15)
+
+    // Count past, today, and future days
+    let pastDays = yearDays.filter { !$0.isToday && !$0.isFuture }
+    let todayDays = yearDays.filter { $0.isToday }
+    let futureDays = yearDays.filter { $0.isFuture }
+
+    // June 15 is day 166 of 2026 (non-leap year: 31+28+31+30+31+15 = 166)
+    // Past days: 165 (Jan 1 to Jun 14)
+    // Today: 1 (Jun 15)
+    // Future days: 199 (Jun 16 to Dec 31)
+    #expect(pastDays.count == 165)
+    #expect(todayDays.count == 1)
+    #expect(futureDays.count == 199)
+    #expect(pastDays.count + todayDays.count + futureDays.count == 365)
+}
+
+@Test func dayChangeMidnightTransitionPreservesExperienceCounts() {
+    let calendar = Calendar.current
+    let jan10 = calendar.date(from: DateComponents(year: 2026, month: 1, day: 10))!
+    let jan11 = calendar.date(from: DateComponents(year: 2026, month: 1, day: 11))!
+
+    // Add experience counts
+    let jan10Start = calendar.startOfDay(for: jan10)
+    let experienceCounts: [Date: Int] = [jan10Start: 5]
+
+    // Before midnight (Jan 10 is today)
+    let beforeMidnight = YearDay.generateYear(2026, experienceCounts: experienceCounts, calendar: calendar, referenceDate: jan10)
+    let jan10Before = beforeMidnight.first { calendar.isDate($0.date, inSameDayAs: jan10) }
+
+    #expect(jan10Before?.experienceCount == 5)
+    #expect(jan10Before?.isToday == true)
+
+    // After midnight (Jan 11 is today)
+    let afterMidnight = YearDay.generateYear(2026, experienceCounts: experienceCounts, calendar: calendar, referenceDate: jan11)
+    let jan10After = afterMidnight.first { calendar.isDate($0.date, inSameDayAs: jan10) }
+
+    // Experience count should be preserved, but isToday should change
+    #expect(jan10After?.experienceCount == 5, "Experience count should be preserved after midnight")
+    #expect(jan10After?.isToday == false, "Jan 10 should no longer be today after midnight")
+}
