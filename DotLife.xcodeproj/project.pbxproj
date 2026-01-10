@@ -7,18 +7,51 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04F92A183D74C2FB873F5DD2 /* ExperienceRecordTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB326DC821D785B33147805 /* ExperienceRecordTests.swift */; };
 		1016ED4660189B5C9A9E2445 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06630B71C84E64075752C7B1 /* AppDelegate.swift */; };
 		17084F1C47AAF65F7FAD7E48 /* DotLifeShell.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 076830AD941C7FFFBEB60F9E /* DotLifeShell.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2972EF827881DBF775966B94 /* DotLifePersistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = EE7280C6AF64C726F799D348 /* DotLifePersistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2A38CE456C5B4E814A4279CC /* TuistAssets+DotLifeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C40C12E3B05CBA40FC5147 /* TuistAssets+DotLifeApp.swift */; };
+		2C62745D64DABF6C18DC0ADF /* TimeBucketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E61A3EC781B1900FA83808B /* TimeBucketTests.swift */; };
+		35F229D5DB9102695AB03B46 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5C3681A5895F25DDEB59A19D /* Assets.xcassets */; };
+		3C1AB4A4262A8606FF5DA033 /* DotLifeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83620F0A5E7924CC7FA9023E /* DotLifeUITests.swift */; };
 		4ED121013E7BD3A0F4AB0E33 /* DotLifeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB2FC8F67F03C5FEC220D2B /* DotLifeApp.swift */; };
+		4F1C341666321D3D6F124516 /* DotLifeDomain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DFA62858C95DA3E40102400 /* DotLifeDomain.framework */; };
+		54F925296D8E0A6127C7BCCE /* ViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5414EBC75B7AEC057CC3FBE /* ViewModelTests.swift */; };
 		707438828267649A062EAFE1 /* DotLifeAppKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B19D41D8A07B4B87A8FC5C9D /* DotLifeAppKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7982FC1DCBB33FBC30D0BF0B /* YearGridLayoutCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D161559F0908556A977A38B /* YearGridLayoutCalculatorTests.swift */; };
+		8F3AB3E3952C321189EB667C /* TuistBundle+DotLifeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029FDB517D0FDB1C7AEA59E3 /* TuistBundle+DotLifeApp.swift */; };
+		9551B0F9B0420D15D8503390 /* TimeBucketingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DC70EB59E02F52D9469A17 /* TimeBucketingServiceTests.swift */; };
+		B03494CE1ECB48C3E9742BF0 /* DotLifeUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90A4C04670EB321E480710A4 /* DotLifeUI.framework */; };
 		B518CD792541919441A98C61 /* DotLifeAppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B19D41D8A07B4B87A8FC5C9D /* DotLifeAppKit.framework */; };
 		D25D0F2275870AC6EA0F2D38 /* DotLifeDS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4AC4A6D2DDBE4DBDB8FB52B2 /* DotLifeDS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D52D45F4505ECF9E5989967B /* DotLifeDomain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2DFA62858C95DA3E40102400 /* DotLifeDomain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DCAAC2419724C456092244C7 /* DotLifeDomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3695CBE30DA7C0C6CE27360B /* DotLifeDomainTests.swift */; };
 		DF291F65674BAE73EE0D1F52 /* DotLifeUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 90A4C04670EB321E480710A4 /* DotLifeUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F8F73342AB796C5457D200B2 /* YearDayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545CDA8E5D8A7DDF0164E521 /* YearDayTests.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		8FA04E5AEB5B651FC378FD8D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5A9D88DED6705AE044C85A3B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CB8EA750016ABDC21B941740;
+			remoteInfo = DotLifeApp;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
+		3850D6A1417C93C054F53C24 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C6ACB87D513CF88484BFFB24 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -38,19 +71,41 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		029FDB517D0FDB1C7AEA59E3 /* TuistBundle+DotLifeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+DotLifeApp.swift"; sourceTree = "<group>"; };
 		06630B71C84E64075752C7B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		076830AD941C7FFFBEB60F9E /* DotLifeShell.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeShell.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		16F1D9B365E1C796EB45FB22 /* DotLifeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DotLifeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E61A3EC781B1900FA83808B /* TimeBucketTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBucketTests.swift; sourceTree = "<group>"; };
 		2DFA62858C95DA3E40102400 /* DotLifeDomain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeDomain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3695CBE30DA7C0C6CE27360B /* DotLifeDomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotLifeDomainTests.swift; sourceTree = "<group>"; };
 		4AC4A6D2DDBE4DBDB8FB52B2 /* DotLifeDS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeDS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		545CDA8E5D8A7DDF0164E521 /* YearDayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearDayTests.swift; sourceTree = "<group>"; };
+		5C3681A5895F25DDEB59A19D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6D161559F0908556A977A38B /* YearGridLayoutCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearGridLayoutCalculatorTests.swift; sourceTree = "<group>"; };
+		83620F0A5E7924CC7FA9023E /* DotLifeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotLifeUITests.swift; sourceTree = "<group>"; };
 		90A4C04670EB321E480710A4 /* DotLifeUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		929E02CA993BAFEF3BA26C57 /* DotLifeAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DotLifeAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DB326DC821D785B33147805 /* ExperienceRecordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceRecordTests.swift; sourceTree = "<group>"; };
 		B19D41D8A07B4B87A8FC5C9D /* DotLifeAppKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeAppKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6DC70EB59E02F52D9469A17 /* TimeBucketingServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBucketingServiceTests.swift; sourceTree = "<group>"; };
 		DF189EF1331D2D9511117968 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E0C40C12E3B05CBA40FC5147 /* TuistAssets+DotLifeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+DotLifeApp.swift"; sourceTree = "<group>"; };
 		EE7280C6AF64C726F799D348 /* DotLifePersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifePersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F13B2D9D45F07CEEB5709E70 /* DotLifeAppTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "DotLifeAppTests-Info.plist"; sourceTree = "<group>"; };
+		F5414EBC75B7AEC057CC3FBE /* ViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTests.swift; sourceTree = "<group>"; };
 		FDB2FC8F67F03C5FEC220D2B /* DotLifeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotLifeApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		51DE5C9E23C5C8A8041B7A9A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F1C341666321D3D6F124516 /* DotLifeDomain.framework in Frameworks */,
+				B03494CE1ECB48C3E9742BF0 /* DotLifeUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EB511CE0C9D8EBB26F8A7DCB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -65,9 +120,21 @@
 		030123D06B35B605C02C259C /* Project */ = {
 			isa = PBXGroup;
 			children = (
+				BAB0DFD551C82F4D4239BEF1 /* Derived */,
 				2D60FC1B057D84A7CEF387F5 /* DotLifeApp */,
+				E314D7329708F7C0AB410F5D /* Packages */,
 			);
 			name = Project;
+			sourceTree = "<group>";
+		};
+		1FC00DBABCEFC92869E10708 /* DotLifeUITests */ = {
+			isa = PBXGroup;
+			children = (
+				83620F0A5E7924CC7FA9023E /* DotLifeUITests.swift */,
+				F5414EBC75B7AEC057CC3FBE /* ViewModelTests.swift */,
+				6D161559F0908556A977A38B /* YearGridLayoutCalculatorTests.swift */,
+			);
+			path = DotLifeUITests;
 			sourceTree = "<group>";
 		};
 		2634FB84ADC51AD4485BB8C6 /* Products */ = {
@@ -75,6 +142,7 @@
 			children = (
 				16F1D9B365E1C796EB45FB22 /* DotLifeApp.app */,
 				B19D41D8A07B4B87A8FC5C9D /* DotLifeAppKit.framework */,
+				929E02CA993BAFEF3BA26C57 /* DotLifeAppTests.xctest */,
 				2DFA62858C95DA3E40102400 /* DotLifeDomain.framework */,
 				4AC4A6D2DDBE4DBDB8FB52B2 /* DotLifeDS.framework */,
 				EE7280C6AF64C726F799D348 /* DotLifePersistence.framework */,
@@ -87,10 +155,80 @@
 		2D60FC1B057D84A7CEF387F5 /* DotLifeApp */ = {
 			isa = PBXGroup;
 			children = (
+				B3816484EBBD44F66C83876A /* Resources */,
 				D36045012F5DC8AE0C30B8A1 /* Sources */,
 				C661E4FAE0974CD6B0BCB7F4 /* SupportingFiles */,
 			);
 			path = DotLifeApp;
+			sourceTree = "<group>";
+		};
+		673BF874F65FB26AD53F4607 /* DotLifeDomain */ = {
+			isa = PBXGroup;
+			children = (
+				993F8F443FAF733674496F98 /* Tests */,
+			);
+			path = DotLifeDomain;
+			sourceTree = "<group>";
+		};
+		993F8F443FAF733674496F98 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				A2304560861AB8C937B4264B /* DotLifeDomainTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		9BA556A3F8A289DBF0883EF9 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				1FC00DBABCEFC92869E10708 /* DotLifeUITests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		A2304560861AB8C937B4264B /* DotLifeDomainTests */ = {
+			isa = PBXGroup;
+			children = (
+				3695CBE30DA7C0C6CE27360B /* DotLifeDomainTests.swift */,
+				9DB326DC821D785B33147805 /* ExperienceRecordTests.swift */,
+				B6DC70EB59E02F52D9469A17 /* TimeBucketingServiceTests.swift */,
+				1E61A3EC781B1900FA83808B /* TimeBucketTests.swift */,
+				545CDA8E5D8A7DDF0164E521 /* YearDayTests.swift */,
+			);
+			path = DotLifeDomainTests;
+			sourceTree = "<group>";
+		};
+		A470C3669A1AAF9C94AAD371 /* DotLifeUI */ = {
+			isa = PBXGroup;
+			children = (
+				9BA556A3F8A289DBF0883EF9 /* Tests */,
+			);
+			path = DotLifeUI;
+			sourceTree = "<group>";
+		};
+		B3816484EBBD44F66C83876A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5C3681A5895F25DDEB59A19D /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		BAB0DFD551C82F4D4239BEF1 /* Derived */ = {
+			isa = PBXGroup;
+			children = (
+				C2D971C1F146622A510ADB84 /* InfoPlists */,
+				E3FA0881C42F972C5E1B386F /* Sources */,
+			);
+			path = Derived;
+			sourceTree = "<group>";
+		};
+		C2D971C1F146622A510ADB84 /* InfoPlists */ = {
+			isa = PBXGroup;
+			children = (
+				F13B2D9D45F07CEEB5709E70 /* DotLifeAppTests-Info.plist */,
+			);
+			path = InfoPlists;
 			sourceTree = "<group>";
 		};
 		C661E4FAE0974CD6B0BCB7F4 /* SupportingFiles */ = {
@@ -106,6 +244,24 @@
 			children = (
 				06630B71C84E64075752C7B1 /* AppDelegate.swift */,
 				FDB2FC8F67F03C5FEC220D2B /* DotLifeApp.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		E314D7329708F7C0AB410F5D /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				673BF874F65FB26AD53F4607 /* DotLifeDomain */,
+				A470C3669A1AAF9C94AAD371 /* DotLifeUI */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		E3FA0881C42F972C5E1B386F /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				E0C40C12E3B05CBA40FC5147 /* TuistAssets+DotLifeApp.swift */,
+				029FDB517D0FDB1C7AEA59E3 /* TuistBundle+DotLifeApp.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -141,6 +297,27 @@
 			productReference = 16F1D9B365E1C796EB45FB22 /* DotLifeApp.app */;
 			productType = "com.apple.product-type.application";
 		};
+		CBB854D55EDE6DFFBECEC3C3 /* DotLifeAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D3A7F10AE0E7F68F97CDB59 /* Build configuration list for PBXNativeTarget "DotLifeAppTests" */;
+			buildPhases = (
+				AB300AF8097ADD959B4E89CD /* Sources */,
+				15D142146F545CCB0C07779A /* Resources */,
+				51DE5C9E23C5C8A8041B7A9A /* Frameworks */,
+				3850D6A1417C93C054F53C24 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C2EA2985C5C06870A1A6C117 /* PBXTargetDependency */,
+			);
+			name = DotLifeAppTests;
+			packageProductDependencies = (
+			);
+			productName = DotLifeAppTests;
+			productReference = 929E02CA993BAFEF3BA26C57 /* DotLifeAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -149,6 +326,9 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				TargetAttributes = {
+					CBB854D55EDE6DFFBECEC3C3 = {
+						TestTargetID = CB8EA750016ABDC21B941740;
+					};
 				};
 			};
 			buildConfigurationList = 8ABCC2F14D9D5CA9F04EAAC2 /* Build configuration list for PBXProject "DotLife" */;
@@ -165,15 +345,24 @@
 			projectRoot = "";
 			targets = (
 				CB8EA750016ABDC21B941740 /* DotLifeApp */,
+				CBB854D55EDE6DFFBECEC3C3 /* DotLifeAppTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		15D142146F545CCB0C07779A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A3BA5E0EB738E64E01C0878E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35F229D5DB9102695AB03B46 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,12 +373,38 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A38CE456C5B4E814A4279CC /* TuistAssets+DotLifeApp.swift in Sources */,
+				8F3AB3E3952C321189EB667C /* TuistBundle+DotLifeApp.swift in Sources */,
 				1016ED4660189B5C9A9E2445 /* AppDelegate.swift in Sources */,
 				4ED121013E7BD3A0F4AB0E33 /* DotLifeApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AB300AF8097ADD959B4E89CD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCAAC2419724C456092244C7 /* DotLifeDomainTests.swift in Sources */,
+				04F92A183D74C2FB873F5DD2 /* ExperienceRecordTests.swift in Sources */,
+				2C62745D64DABF6C18DC0ADF /* TimeBucketTests.swift in Sources */,
+				9551B0F9B0420D15D8503390 /* TimeBucketingServiceTests.swift in Sources */,
+				F8F73342AB796C5457D200B2 /* YearDayTests.swift in Sources */,
+				3C1AB4A4262A8606FF5DA033 /* DotLifeUITests.swift in Sources */,
+				54F925296D8E0A6127C7BCCE /* ViewModelTests.swift in Sources */,
+				7982FC1DCBB33FBC30D0BF0B /* YearGridLayoutCalculatorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C2EA2985C5C06870A1A6C117 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = DotLifeApp;
+			target = CB8EA750016ABDC21B941740 /* DotLifeApp */;
+			targetProxy = 8FA04E5AEB5B651FC378FD8D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2653E606FFF79EC2D8BE151B /* Debug */ = {
@@ -272,6 +487,64 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		419C34A17208E821B8743165 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = "Derived/InfoPlists/DotLifeAppTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.antran.dotlife.tests;
+				PRODUCT_NAME = DotLifeAppTests;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = (
+					"$(inherited)",
+					DEBUG,
+				);
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DotLifeApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DotLifeApp";
+				TEST_TARGET_NAME = DotLifeApp;
+			};
+			name = Debug;
+		};
+		99337EB46390A27B32E2E970 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = "Derived/InfoPlists/DotLifeAppTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.antran.dotlife.tests;
+				PRODUCT_NAME = DotLifeAppTests;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DotLifeApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DotLifeApp";
+				TEST_TARGET_NAME = DotLifeApp;
 			};
 			name = Release;
 		};
@@ -363,6 +636,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0D3A7F10AE0E7F68F97CDB59 /* Build configuration list for PBXNativeTarget "DotLifeAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				419C34A17208E821B8743165 /* Debug */,
+				99337EB46390A27B32E2E970 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		5BE60E6E19CABBA6371D38E0 /* Build configuration list for PBXNativeTarget "DotLifeApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

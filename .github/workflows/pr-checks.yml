@@ -1,0 +1,142 @@
+name: iOS PR Build and Test
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  unit-tests:
+    name: Unit Tests (Tuist)
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26.1'
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Install Tuist and xcbeautify
+        run: |
+          brew install tuist xcbeautify
+          tuist version
+
+      - name: Install dependencies
+        run: tuist install
+
+      - name: Generate Xcode project
+        run: tuist generate --no-open
+
+      - name: Show available simulators
+        run: xcrun simctl list devices available
+
+      - name: Run unit tests
+        run: |
+          set -o pipefail
+          tuist test DotLifeApp \
+            -d "iPhone 17 Pro" \
+            -o 26.1 \
+            2>&1 | xcbeautify
+        continue-on-error: false
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: |
+            ~/Library/Developer/Xcode/DerivedData/*/Logs/Test/*.xcresult
+          retention-days: 7
+
+  maestro-tests:
+    name: Maestro UI Tests
+    runs-on: macos-latest
+    needs: unit-tests
+    env:
+      MAESTRO_CLI_NO_ANALYTICS: "1"
+      MAESTRO_DRIVER_STARTUP_TIMEOUT: "180000"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26.1'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Show Java version
+        run: java -version
+
+      - name: Install Tuist
+        run: |
+          brew install tuist
+          tuist version
+
+      - name: Install dependencies
+        run: tuist install
+
+      - name: Generate Xcode project
+        run: tuist generate --no-open
+
+      - name: Install Maestro
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Show Maestro version
+        run: |
+          export PATH="$HOME/.maestro/bin:$PATH"
+          maestro --version
+
+      - name: Boot simulator
+        run: |
+          SIMULATOR_ID=$(xcrun simctl list devices available | grep "iPhone 17 Pro" | head -1 | grep -oE '[0-9A-F-]{36}')
+          if [ -z "$SIMULATOR_ID" ]; then
+            echo "No available iPhone 17 Pro simulator found."
+            xcrun simctl list devices available
+            exit 1
+          fi
+          xcrun simctl boot "$SIMULATOR_ID" || true
+          xcrun simctl bootstatus "$SIMULATOR_ID" -b
+          open -a Simulator
+          echo "SIMULATOR_ID=$SIMULATOR_ID" >> $GITHUB_ENV
+
+      - name: Build app for simulator
+        run: |
+          set -o pipefail
+          tuist build DotLifeApp \
+            -d "iPhone 17 Pro" \
+            -o 26.1
+
+      - name: Install app on simulator
+        run: |
+          APP_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "DotLifeApp.app" -path "*/Build/Products/Debug-iphonesimulator/*" | head -1)
+          xcrun simctl install booted "$APP_PATH"
+
+      - name: Run Maestro tests
+        run: |
+          export PATH="$HOME/.maestro/bin:$PATH"
+          maestro test .maestro/flows/
+
+      - name: Upload Maestro test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-test-results
+          path: |
+            ~/.maestro/tests/
+          retention-days: 7

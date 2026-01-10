@@ -176,6 +176,34 @@ public final class CoreDataExperienceRepository: ExperienceRepository, @unchecke
         }
     }
 
+    // MARK: - Year View Support
+
+    public func experienceCountsByDay(from startDate: Date, to endDate: Date) async throws -> [Date: Int] {
+        try await stack.performBackgroundTask { context in
+            let calendar = Calendar.current
+
+            // Fetch all experiences in the date range
+            let fetchRequest = ExperienceEntity.fetchRequest()
+            fetchRequest.predicate = NSPredicate(
+                format: "timestamp >= %@ AND timestamp <= %@",
+                startDate as NSDate,
+                endDate as NSDate
+            )
+
+            let entities = try context.fetch(fetchRequest)
+
+            // Group by day
+            var countsByDay: [Date: Int] = [:]
+            for entity in entities {
+                let timestamp = entity.timestamp
+                let dayStart = calendar.startOfDay(for: timestamp)
+                countsByDay[dayStart, default: 0] += 1
+            }
+
+            return countsByDay
+        }
+    }
+
     // MARK: - Private Helpers
 
     private func countExperiences(in bucket: TimeBucket, context: NSManagedObjectContext) throws -> Int {

@@ -74,6 +74,9 @@ public enum AppBootstrapper {
 
         // Create the view models with dependencies
         if let repo = repository {
+            let yearVM = YearViewModel(repository: repo)
+            controller.yearViewModel = yearVM
+
             let captureVM = CaptureViewModel(
                 repository: repo,
                 bucketingService: bucketingService ?? .current

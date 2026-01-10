@@ -3,7 +3,24 @@
     "allow": [
       "Bash(/usr/libexec/java_home)",
       "WebSearch",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "mcp__XcodeBuildMCP__list_sims",
+      "mcp__XcodeBuildMCP__session-set-defaults",
+      "mcp__XcodeBuildMCP__build_sim",
+      "Bash(tuist generate:*)",
+      "mcp__XcodeBuildMCP__build_run_sim",
+      "mcp__XcodeBuildMCP__screenshot",
+      "mcp__XcodeBuildMCP__swipe",
+      "Bash(xargs:*)",
+      "Bash(grep:*)",
+      "mcp__XcodeBuildMCP__test_sim",
+      "mcp__XcodeBuildMCP__list_schemes",
+      "Bash(xcodebuild test:*)",
+      "Bash(swift test:*)",
+      "Bash(xcodebuild:*)",
+      "Bash(tuist test:*)",
+      "mcp__XcodeBuildMCP__swift_package_test",
+      "mcp__XcodeBuildMCP__describe_ui"
     ]
   }
 }

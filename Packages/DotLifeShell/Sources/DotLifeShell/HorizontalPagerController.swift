@@ -1,12 +1,14 @@
 #if canImport(UIKit)
 import Combine
-import UIKit
-import SwiftUI
-import DotLifeUI
 import DotLifeDomain
 import DotLifeDS
+import DotLifeUI
+import SwiftUI
+import UIKit
 
-/// Horizontal pager that contains Capture and Visualize pages.
+/// Horizontal pager that contains Year, Capture, and Visualize pages.
+/// Page order: Year (0) → Capture (1) → Visualize (2)
+/// Default page on launch: Capture (1)
 public final class HorizontalPagerController: UIViewController {
 
     // MARK: - Properties
@@ -31,6 +33,9 @@ public final class HorizontalPagerController: UIViewController {
         return v
     }()
 
+    /// The year view model (injected from AppKit)
+    public var yearViewModel: YearViewModel?
+
     /// The capture view model (injected from AppKit)
     public var captureViewModel: CaptureViewModel?
 
@@ -44,13 +49,24 @@ public final class HorizontalPagerController: UIViewController {
     public var themeManager: ThemeManager?
 
     /// Child view controllers for each page
+    private var yearHostingController: UIViewController?
     private var captureHostingController: UIViewController?
     private var visualizeController: VerticalPagerController?
 
     private var themeObservation: AnyCancellable?
-    private var currentPage: Int = 0
+    private var currentPage: Int = 1  // Default to Capture page
     private var pendingPage: Int?
     private var didSetInitialPage = false
+
+    /// Number of pages in the pager
+    private let pageCount: Int = 3
+
+    /// Page indices
+    private enum Page {
+        static let year = 0
+        static let capture = 1
+        static let visualize = 2
+    }
 
     // MARK: - Lifecycle
 
@@ -70,7 +86,14 @@ public final class HorizontalPagerController: UIViewController {
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if !didSetInitialPage {
-            syncCurrentPage()
+            // Ensure scroll view has valid bounds before setting initial page
+            let width = scrollView.bounds.width
+            guard width > 0 else { return }
+
+            // Scroll to Capture page (page 1) without animation on initial load
+            let x = CGFloat(Page.capture) * width
+            scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: false)
+            setCurrentPage(Page.capture)
             didSetInitialPage = true
         }
     }
@@ -98,8 +121,8 @@ public final class HorizontalPagerController: UIViewController {
             contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
             // Height must equal scroll view visible height (no vertical scrolling)
             contentView.heightAnchor.constraint(equalTo: scrollView.frameLayoutGuide.heightAnchor),
-            // Width is 2x scroll view visible width (2 pages)
-            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor, multiplier: 2)
+            // Width is 3x scroll view visible width (3 pages: Year, Capture, Visualize)
+            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor, multiplier: CGFloat(pageCount))
         ])
 
         scrollView.delegate = self
@@ -107,11 +130,49 @@ public final class HorizontalPagerController: UIViewController {
     }
 
     private func setupPages() {
+        // Page 0: Year
+        setupYearPage()
+
         // Page 1: Capture
         setupCapturePage()
 
         // Page 2: Visualize (vertical pager)
         setupVisualizePage()
+    }
+
+    private func setupYearPage() {
+        guard let viewModel = yearViewModel else {
+            // Fallback to placeholder if no view model
+            let placeholder = makeHostingController(rootView: PlaceholderRootView())
+            addChild(placeholder)
+            contentView.addSubview(placeholder.view)
+            placeholder.view.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                placeholder.view.topAnchor.constraint(equalTo: contentView.topAnchor),
+                placeholder.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+                placeholder.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+                placeholder.view.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
+            ])
+            placeholder.didMove(toParent: self)
+            return
+        }
+
+        let yearView = YearGridView(viewModel: viewModel)
+        let hostingController = makeHostingController(rootView: yearView)
+        yearHostingController = hostingController
+
+        addChild(hostingController)
+        contentView.addSubview(hostingController.view)
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            hostingController.view.topAnchor.constraint(equalTo: contentView.topAnchor),
+            hostingController.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            hostingController.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            hostingController.view.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
+        ])
+
+        hostingController.didMove(toParent: self)
     }
 
     private func setupCapturePage() {
@@ -123,7 +184,7 @@ public final class HorizontalPagerController: UIViewController {
             placeholder.view.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 placeholder.view.topAnchor.constraint(equalTo: contentView.topAnchor),
-                placeholder.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+                placeholder.view.leadingAnchor.constraint(equalTo: yearHostingController?.view.trailingAnchor ?? contentView.leadingAnchor),
                 placeholder.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
                 placeholder.view.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
             ])
@@ -141,7 +202,7 @@ public final class HorizontalPagerController: UIViewController {
 
         NSLayoutConstraint.activate([
             hostingController.view.topAnchor.constraint(equalTo: contentView.topAnchor),
-            hostingController.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            hostingController.view.leadingAnchor.constraint(equalTo: yearHostingController?.view.trailingAnchor ?? contentView.leadingAnchor),
             hostingController.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             hostingController.view.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
         ])
@@ -167,7 +228,7 @@ public final class HorizontalPagerController: UIViewController {
 
         NSLayoutConstraint.activate([
             visualizeVC.view.topAnchor.constraint(equalTo: contentView.topAnchor),
-            visualizeVC.view.leadingAnchor.constraint(equalTo: contentView.centerXAnchor),
+            visualizeVC.view.leadingAnchor.constraint(equalTo: captureHostingController?.view.trailingAnchor ?? contentView.leadingAnchor),
             visualizeVC.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             visualizeVC.view.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
         ])
@@ -184,6 +245,7 @@ public final class HorizontalPagerController: UIViewController {
 
     /// Scrolls to a specific page.
     public func scrollTo(page: Int, animated: Bool = true) {
+        guard page >= 0 && page < pageCount else { return }
         let x = CGFloat(page) * scrollView.bounds.width
         if animated {
             pendingPage = page
@@ -191,6 +253,13 @@ public final class HorizontalPagerController: UIViewController {
             setCurrentPage(page)
         }
         scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: animated)
+    }
+
+    /// Refreshes the year view data.
+    public func refreshYearView() {
+        Task { @MainActor in
+            await yearViewModel?.refresh()
+        }
     }
 
     // MARK: - Theme
@@ -204,12 +273,14 @@ public final class HorizontalPagerController: UIViewController {
     private func applyTheme() {
         guard let themeManager else { return }
         overrideUserInterfaceStyle = themeManager.interfaceStyleOverride
+        yearHostingController?.overrideUserInterfaceStyle = themeManager.interfaceStyleOverride
         captureHostingController?.overrideUserInterfaceStyle = themeManager.interfaceStyleOverride
         visualizeController?.overrideUserInterfaceStyle = themeManager.interfaceStyleOverride
         let colors = themeManager.uiColors(for: traitCollection.userInterfaceStyle)
         view.backgroundColor = colors.appBackground
         scrollView.backgroundColor = colors.appBackground
         contentView.backgroundColor = colors.appBackground
+        yearHostingController?.view.backgroundColor = colors.appBackground
         captureHostingController?.view.backgroundColor = colors.appBackground
         visualizeController?.view.backgroundColor = colors.appBackground
     }
@@ -235,7 +306,13 @@ public final class HorizontalPagerController: UIViewController {
     private func setCurrentPage(_ page: Int) {
         guard page != currentPage else { return }
         currentPage = page
-        captureViewModel?.isCaptureActive = page == 0
+        // Capture is active when on the Capture page
+        captureViewModel?.isCaptureActive = page == Page.capture
+
+        // Refresh year view when navigating to it
+        if page == Page.year {
+            refreshYearView()
+        }
     }
 
     private func syncCurrentPage() {

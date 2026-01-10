@@ -368,3 +368,134 @@ import CoreData
 
     #expect(results.count == 3)
 }
+
+// MARK: - Experience Counts By Day Tests
+
+@Test func repositoryReturnsEmptyCountsForEmptyDatabase() async throws {
+    let stack = CoreDataStack.inMemory()
+    let repository = CoreDataExperienceRepository(stack: stack)
+
+    let calendar = Calendar.current
+    let today = calendar.startOfDay(for: Date())
+    let weekAgo = calendar.date(byAdding: .day, value: -7, to: today)!
+
+    let counts = try await repository.experienceCountsByDay(from: weekAgo, to: today)
+
+    #expect(counts.isEmpty)
+}
+
+@Test func repositoryCountsExperiencesByDay() async throws {
+    let stack = CoreDataStack.inMemory()
+    let repository = CoreDataExperienceRepository(stack: stack)
+
+    let calendar = Calendar.current
+    let today = calendar.startOfDay(for: Date())
+    let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
+
+    // Create 3 experiences today
+    for i in 0..<3 {
+        let timestamp = today.addingTimeInterval(Double(i) * 3600) // 1 hour apart
+        let request = ExperienceCreateRequest.note("Today \(i)", momentType: .now, timestamp: timestamp)
+        _ = try await repository.create(request)
+    }
+
+    // Create 2 experiences yesterday
+    for i in 0..<2 {
+        let timestamp = yesterday.addingTimeInterval(Double(i) * 3600)
+        let request = ExperienceCreateRequest.note("Yesterday \(i)", momentType: .now, timestamp: timestamp)
+        _ = try await repository.create(request)
+    }
+
+    let weekAgo = calendar.date(byAdding: .day, value: -7, to: today)!
+    let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
+
+    let counts = try await repository.experienceCountsByDay(from: weekAgo, to: tomorrow)
+
+    #expect(counts[today] == 3)
+    #expect(counts[yesterday] == 2)
+}
+
+@Test func repositoryCountsByDayRespectsDateRange() async throws {
+    let stack = CoreDataStack.inMemory()
+    let repository = CoreDataExperienceRepository(stack: stack)
+
+    let calendar = Calendar.current
+    let today = calendar.startOfDay(for: Date())
+    let twoDaysAgo = calendar.date(byAdding: .day, value: -2, to: today)!
+    let threeDaysAgo = calendar.date(byAdding: .day, value: -3, to: today)!
+
+    // Create experiences
+    _ = try await repository.create(
+        ExperienceCreateRequest.note("Today", momentType: .now, timestamp: today)
+    )
+    _ = try await repository.create(
+        ExperienceCreateRequest.note("Two days ago", momentType: .now, timestamp: twoDaysAgo)
+    )
+    _ = try await repository.create(
+        ExperienceCreateRequest.note("Three days ago", momentType: .now, timestamp: threeDaysAgo)
+    )
+
+    // Query only last 2 days
+    let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
+    let counts = try await repository.experienceCountsByDay(from: yesterday, to: today)
+
+    #expect(counts[today] == 1)
+    #expect(counts[twoDaysAgo] == nil) // Outside range
+    #expect(counts[threeDaysAgo] == nil) // Outside range
+}
+
+@Test func repositoryCountsByDayGroupsCorrectly() async throws {
+    let stack = CoreDataStack.inMemory()
+    let repository = CoreDataExperienceRepository(stack: stack)
+
+    let calendar = Calendar.current
+    let today = calendar.startOfDay(for: Date())
+
+    // Create experiences at different times on the same day
+    let morning = today.addingTimeInterval(8 * 3600) // 8 AM
+    let noon = today.addingTimeInterval(12 * 3600) // 12 PM
+    let evening = today.addingTimeInterval(20 * 3600) // 8 PM
+
+    _ = try await repository.create(
+        ExperienceCreateRequest.note("Morning", momentType: .now, timestamp: morning)
+    )
+    _ = try await repository.create(
+        ExperienceCreateRequest.note("Noon", momentType: .now, timestamp: noon)
+    )
+    _ = try await repository.create(
+        ExperienceCreateRequest.note("Evening", momentType: .now, timestamp: evening)
+    )
+
+    let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
+    let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
+    let counts = try await repository.experienceCountsByDay(from: yesterday, to: tomorrow)
+
+    // All 3 experiences should be grouped under today
+    #expect(counts.count == 1)
+    #expect(counts[today] == 3)
+}
+
+@Test func repositoryCountsByDayIncludesAllExperienceTypes() async throws {
+    let stack = CoreDataStack.inMemory()
+    let repository = CoreDataExperienceRepository(stack: stack)
+
+    let calendar = Calendar.current
+    let today = calendar.startOfDay(for: Date())
+
+    // Create different types of experiences
+    _ = try await repository.create(
+        ExperienceCreateRequest.note("Note", momentType: .now, timestamp: today)
+    )
+    _ = try await repository.create(
+        ExperienceCreateRequest.dot(momentType: .now, timestamp: today)
+    )
+    _ = try await repository.create(
+        ExperienceCreateRequest.link(URL(string: "https://example.com")!, momentType: .now, timestamp: today)
+    )
+
+    let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
+    let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
+    let counts = try await repository.experienceCountsByDay(from: yesterday, to: tomorrow)
+
+    #expect(counts[today] == 3)
+}

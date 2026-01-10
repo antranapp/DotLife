@@ -4,7 +4,7 @@ import Foundation
 
 // MARK: - Module Tests
 
-@Test func moduleVersionExists() async throws {
+@Test func domainModuleVersionExists() async throws {
     #expect(DotLifeDomainModule.version == "0.1.0")
 }
 

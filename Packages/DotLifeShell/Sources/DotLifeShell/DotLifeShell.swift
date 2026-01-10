@@ -21,6 +21,9 @@ public enum DotLifeShellModule {
 #if canImport(UIKit)
 /// Root view controller that hosts the horizontal pager with direction lock.
 public final class RootViewController: UIViewController {
+    /// The view model for year visualization, injected from AppKit
+    public var yearViewModel: YearViewModel?
+
     /// The view model for capture, injected from AppKit
     public var captureViewModel: CaptureViewModel?
 
@@ -45,6 +48,7 @@ public final class RootViewController: UIViewController {
         setupDetailPresentationCallback()
 
         let pager = HorizontalPagerController()
+        pager.yearViewModel = yearViewModel
         pager.captureViewModel = captureViewModel
         pager.visualizeViewModel = visualizeViewModel
         pager.directionLock = directionLock
