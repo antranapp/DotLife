@@ -113,10 +113,11 @@ private func makeDate(
 // MARK: - Display Label Tests
 
 @Test func timeBucketDisplayLabelForHour() {
-    let date = makeDate(year: 2024, month: 6, day: 15, hour: 15)
+    // Use current timezone so displayLabel() output matches expected hour
+    let date = makeDate(year: 2024, month: 6, day: 15, hour: 15, timeZone: .current)
     let bucket = TimeBucket(type: .hour, start: date)
 
-    // The exact format may vary by locale, but it should contain "3" and "pm"
+    // The exact format may vary by locale, but it should contain "3" (12h) or "15" (24h)
     let label = bucket.displayLabel()
     #expect(label.lowercased().contains("3") || label.lowercased().contains("15"))
 }

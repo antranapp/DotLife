@@ -33,15 +33,15 @@ public struct YearDotView: View {
                 glowColor: colors.accent,
                 isAnimating: day.isToday,
                 animationDuration: 2.0,   // Breathing animation cycle
-                breathingMinScale: 0.5,   // Start small
-                breathingMaxScale: 1.0    // Grow to full size (same as other dots)
+                breathingMinScale: 1.0,   // Dot stays fixed size
+                breathingMaxScale: 1.0    // Same as other dots (no size change)
             )
 
             // Show experience count for days with experiences
             if day.hasExperiences {
                 Text("\(day.experienceCount)")
                     .font(.system(size: size * 0.5, weight: .bold, design: .monospaced))
-                    .foregroundStyle(colors.appBackground)
+                    .foregroundStyle(day.isToday ? colors.appBackground : colors.accent)
                     .minimumScaleFactor(0.5)
             }
         }
@@ -52,11 +52,9 @@ public struct YearDotView: View {
 
     /// Determines the fill color based on day state.
     /// - Today: accent color (brightest, with animation)
-    /// - Days with experiences: accent color
-    /// - Past days without experiences: dotBase color
-    /// - Future days: dotBase color (faint)
+    /// - All other days: dotBase color (uniform appearance)
     private func fillColor(colors: ThemeColors) -> Color {
-        if day.isToday || day.hasExperiences {
+        if day.isToday {
             return colors.accent
         } else {
             return colors.dotBase
@@ -66,27 +64,21 @@ public struct YearDotView: View {
     /// Determines opacity based on day state.
     /// Brightness hierarchy (brightest to faintest):
     /// 1. Today: 1.0 (brightest, with breathing animation)
-    /// 2. Days with experiences: 0.85 (consistent, count shown as number)
-    /// 3. Past days without experiences: 0.25 (subtle)
-    /// 4. Future days: 0.08 (barely visible)
+    /// 2. Past days: 0.45 (uniform - experiences indicated by number only)
+    /// 3. Future days: 0.04 (very faint to avoid distraction)
     private var fillOpacity: Double {
         // Today is always brightest
         if day.isToday {
             return 1.0
         }
 
-        // Future days are barely visible
+        // Future days are very faint to avoid distraction
         if day.isFuture {
-            return 0.08
+            return 0.04
         }
 
-        // Days with experiences: consistent brightness (count shown as number)
-        if day.hasExperiences {
-            return 0.85
-        }
-
-        // Past days without experiences: subtle visibility
-        return 0.25
+        // All past days have the same opacity (experiences shown by number)
+        return 0.3
     }
 
     private var accessibilityLabel: String {

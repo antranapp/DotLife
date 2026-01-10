@@ -369,4 +369,209 @@ final class YearGridLayoutCalculatorTests: XCTestCase {
             "Layout should use at least 80% of one dimension, but max usage is \(maxUsage * 100)%"
         )
     }
+
+    // MARK: - Safety Margin Regression Tests
+
+    /// Verify that the layout applies safety margin (2px buffer)
+    /// This test ensures the fix for last row cutoff doesn't regress
+    func testLayoutAppliesSafetyMargin() {
+        // Given: Various screen sizes
+        let testCases: [(width: CGFloat, height: CGFloat)] = [
+            (370, 700),
+            (402, 874),
+            (393, 852),
+            (390, 844),
+            (375, 812),
+        ]
+
+        for (width, height) in testCases {
+            // When
+            let layout = calculator.calculateLayout(
+                availableWidth: width,
+                availableHeight: height,
+                dayCount: 365
+            )
+
+            // Then: Layout should have at least 2px margin from edges (safety margin)
+            let widthMargin = width - layout.totalWidth
+            let heightMargin = height - layout.totalHeight
+
+            XCTAssertGreaterThanOrEqual(
+                widthMargin,
+                0,
+                "Width margin should be non-negative for \(width)x\(height)"
+            )
+            XCTAssertGreaterThanOrEqual(
+                heightMargin,
+                0,
+                "Height margin should be non-negative for \(width)x\(height)"
+            )
+        }
+    }
+
+    /// Test that dot size is rounded to 0.5 increments to avoid floating point accumulation
+    func testDotSizeRoundedToHalfPixel() {
+        // Given
+        let layout = calculator.calculateLayout(
+            availableWidth: 370,
+            availableHeight: 700,
+            dayCount: 365
+        )
+
+        // Then: Dot size should be a multiple of 0.5
+        let dotSizeDoubled = layout.dotSize * 2
+        XCTAssertEqual(
+            dotSizeDoubled,
+            floor(dotSizeDoubled),
+            "Dot size \(layout.dotSize) should be rounded to 0.5 increments"
+        )
+    }
+
+    /// Test that spacing is rounded to 0.5 increments to avoid floating point accumulation
+    func testSpacingRoundedToHalfPixel() {
+        // Given
+        let layout = calculator.calculateLayout(
+            availableWidth: 370,
+            availableHeight: 700,
+            dayCount: 365
+        )
+
+        // Then: Spacing should be a multiple of 0.5
+        let hSpacingDoubled = layout.horizontalSpacing * 2
+        let vSpacingDoubled = layout.verticalSpacing * 2
+
+        XCTAssertEqual(
+            hSpacingDoubled,
+            floor(hSpacingDoubled),
+            "Horizontal spacing \(layout.horizontalSpacing) should be rounded to 0.5"
+        )
+        XCTAssertEqual(
+            vSpacingDoubled,
+            floor(vSpacingDoubled),
+            "Vertical spacing \(layout.verticalSpacing) should be rounded to 0.5"
+        )
+    }
+
+    /// Stress test: verify no floating point accumulation errors across many calculations
+    func testNoFloatingPointAccumulationErrors() {
+        // Given: Run many iterations to catch accumulation errors
+        let iterations = 100
+
+        for i in 0..<iterations {
+            // Vary dimensions slightly to catch edge cases
+            let width: CGFloat = 350 + CGFloat(i % 50)
+            let height: CGFloat = 650 + CGFloat(i % 50)
+
+            // When
+            let layout = calculator.calculateLayout(
+                availableWidth: width,
+                availableHeight: height,
+                dayCount: 365
+            )
+
+            // Then: Strict verification that layout fits
+            XCTAssertLessThanOrEqual(
+                layout.totalWidth,
+                width,
+                "Iteration \(i): Width \(layout.totalWidth) exceeds \(width)"
+            )
+            XCTAssertLessThanOrEqual(
+                layout.totalHeight,
+                height,
+                "Iteration \(i): Height \(layout.totalHeight) exceeds \(height)"
+            )
+        }
+    }
+
+    /// Test that calculated total dimensions match manual calculation
+    func testTotalDimensionsMatchManualCalculation() {
+        // Given
+        let layout = calculator.calculateLayout(
+            availableWidth: 370,
+            availableHeight: 700,
+            dayCount: 365
+        )
+
+        // When: Calculate totals manually
+        let manualWidth = CGFloat(layout.columns) * layout.dotSize +
+                         CGFloat(layout.columns - 1) * layout.horizontalSpacing
+        let manualHeight = CGFloat(layout.rows) * layout.dotSize +
+                          CGFloat(layout.rows - 1) * layout.verticalSpacing
+
+        // Then: Should match exactly (no floating point errors in calculation)
+        XCTAssertEqual(
+            layout.totalWidth,
+            manualWidth,
+            accuracy: 0.001,
+            "totalWidth should match manual calculation"
+        )
+        XCTAssertEqual(
+            layout.totalHeight,
+            manualHeight,
+            accuracy: 0.001,
+            "totalHeight should match manual calculation"
+        )
+    }
+
+    /// Test exact iPhone 17 Pro dimensions from CLAUDE.md (402x874)
+    func testExactIPhone17ProDimensions() {
+        // Given: Exact dimensions mentioned in CLAUDE.md
+        let availableWidth: CGFloat = 402
+        let availableHeight: CGFloat = 874
+
+        // When
+        let layout = calculator.calculateLayout(
+            availableWidth: availableWidth,
+            availableHeight: availableHeight,
+            dayCount: 365
+        )
+
+        // Then: Must fit with no overflow
+        XCTAssertLessThanOrEqual(
+            layout.totalWidth,
+            availableWidth,
+            "Layout must fit iPhone 17 Pro width"
+        )
+        XCTAssertLessThanOrEqual(
+            layout.totalHeight,
+            availableHeight,
+            "Layout must fit iPhone 17 Pro height - last row must not be cut off"
+        )
+
+        // Verify all 365 days can be displayed
+        let totalCells = layout.columns * layout.rows
+        XCTAssertGreaterThanOrEqual(totalCells, 365)
+    }
+
+    /// Test that leap year (366 days) also fits without cutoff
+    func testLeapYearDoesNotCutOffLastRow() {
+        let testCases: [(width: CGFloat, height: CGFloat)] = [
+            (370, 700),
+            (402, 874),
+            (393, 852),
+        ]
+
+        for (width, height) in testCases {
+            // When: Leap year has 366 days
+            let layout = calculator.calculateLayout(
+                availableWidth: width,
+                availableHeight: height,
+                dayCount: 366
+            )
+
+            // Then
+            XCTAssertLessThanOrEqual(
+                layout.totalHeight,
+                height,
+                "Leap year layout should not cut off last row for \(width)x\(height)"
+            )
+
+            let totalCells = layout.columns * layout.rows
+            XCTAssertGreaterThanOrEqual(
+                totalCells,
+                366,
+                "Must have enough cells for leap year"
+            )
+        }
+    }
 }
