@@ -10,6 +10,7 @@ jobs:
   unit-tests:
     name: Unit Tests (Tuist)
     runs-on: macos-latest
+    if: ${{ !contains(github.event.pull_request.title, '#skiptest') }}
 
     steps:
       - name: Checkout code
@@ -59,6 +60,7 @@ jobs:
     name: Maestro UI Tests
     runs-on: macos-latest
     needs: unit-tests
+    if: ${{ !contains(github.event.pull_request.title, '#skiptest') }}
     env:
       MAESTRO_CLI_NO_ANALYTICS: "1"
       MAESTRO_DRIVER_STARTUP_TIMEOUT: "180000"
