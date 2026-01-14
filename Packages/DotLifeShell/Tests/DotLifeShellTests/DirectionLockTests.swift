@@ -1,7 +1,7 @@
 #if canImport(UIKit)
 import Testing
 import UIKit
-@testable import DotLifeShell
+import DotLifeShell
 
 @Test func directionLockPrefersHorizontalWhenDxDominates() {
     let horizontal = UIScrollView()

@@ -1,5 +1,5 @@
 import XCTest
-@testable import DotLifeUI
+import DotLifeUI
 
 final class YearGridLayoutCalculatorTests: XCTestCase {
     var calculator: YearGridLayoutCalculator!

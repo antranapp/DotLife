@@ -1,5 +1,5 @@
 import Testing
-@testable import DotLifeShell
+import DotLifeShell
 
 @Test func moduleVersionExists() async throws {
     #expect(DotLifeShellModule.version == "0.1.0")
