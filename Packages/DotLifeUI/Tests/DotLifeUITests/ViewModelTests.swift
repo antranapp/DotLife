@@ -1,7 +1,7 @@
 import Testing
 import Foundation
 @testable import DotLifeUI
-@testable import DotLifeDomain
+import DotLifeDomain
 
 // MARK: - Mock Repository
 

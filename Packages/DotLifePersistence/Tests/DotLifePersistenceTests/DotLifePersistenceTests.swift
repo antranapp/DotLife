@@ -2,7 +2,7 @@ import Testing
 import Foundation
 import CoreData
 @testable import DotLifePersistence
-@testable import DotLifeDomain
+import DotLifeDomain
 
 // MARK: - Module Tests
 

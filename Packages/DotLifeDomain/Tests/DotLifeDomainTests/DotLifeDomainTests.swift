@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import DotLifeDomain
+import DotLifeDomain
 
 // MARK: - Module Tests
 
