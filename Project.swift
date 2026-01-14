@@ -14,7 +14,13 @@ let project = Project(
             resources: ["DotLifeApp/Resources/**"],
             dependencies: [
                 .external(name: "DotLifeAppKit")
-            ]
+            ],
+            settings: .settings(
+                base: [
+                    "DEVELOPMENT_TEAM": "69HZYGNPYT",
+                    "CODE_SIGN_STYLE": "Automatic"
+                ]
+            )
         ),
         .target(
             name: "DotLifeAppTests",
