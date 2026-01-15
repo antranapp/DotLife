@@ -17,15 +17,22 @@
 		3C1AB4A4262A8606FF5DA033 /* DotLifeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83620F0A5E7924CC7FA9023E /* DotLifeUITests.swift */; };
 		4ED121013E7BD3A0F4AB0E33 /* DotLifeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB2FC8F67F03C5FEC220D2B /* DotLifeApp.swift */; };
 		4F1C341666321D3D6F124516 /* DotLifeDomain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DFA62858C95DA3E40102400 /* DotLifeDomain.framework */; };
+		51B824AA0C7A83C40DA2820B /* DirectionLockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12CAC683C2D91F38B19B4C7 /* DirectionLockTests.swift */; };
 		54F925296D8E0A6127C7BCCE /* ViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5414EBC75B7AEC057CC3FBE /* ViewModelTests.swift */; };
+		5DB91AEFB6119D8D5D4A085A /* DotLifeShellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A173B227A14D938DF8E6D87 /* DotLifeShellTests.swift */; };
+		62C83BAC89E384DD07E036E2 /* DotLifeAppKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056EC082088F3EEBDD771A6E /* DotLifeAppKitTests.swift */; };
+		6FAAED3EA156150116AC96B6 /* DotLifeShell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 076830AD941C7FFFBEB60F9E /* DotLifeShell.framework */; };
 		707438828267649A062EAFE1 /* DotLifeAppKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B19D41D8A07B4B87A8FC5C9D /* DotLifeAppKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7982FC1DCBB33FBC30D0BF0B /* YearGridLayoutCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D161559F0908556A977A38B /* YearGridLayoutCalculatorTests.swift */; };
 		8F3AB3E3952C321189EB667C /* TuistBundle+DotLifeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029FDB517D0FDB1C7AEA59E3 /* TuistBundle+DotLifeApp.swift */; };
 		9551B0F9B0420D15D8503390 /* TimeBucketingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DC70EB59E02F52D9469A17 /* TimeBucketingServiceTests.swift */; };
+		976B188C413E82C587D1E8ED /* DotLifeAppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B19D41D8A07B4B87A8FC5C9D /* DotLifeAppKit.framework */; };
 		B03494CE1ECB48C3E9742BF0 /* DotLifeUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90A4C04670EB321E480710A4 /* DotLifeUI.framework */; };
 		B518CD792541919441A98C61 /* DotLifeAppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B19D41D8A07B4B87A8FC5C9D /* DotLifeAppKit.framework */; };
+		CE8FEF4987FA0AD717EB4D00 /* DotLifePersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE7280C6AF64C726F799D348 /* DotLifePersistence.framework */; };
 		D25D0F2275870AC6EA0F2D38 /* DotLifeDS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4AC4A6D2DDBE4DBDB8FB52B2 /* DotLifeDS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D52D45F4505ECF9E5989967B /* DotLifeDomain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2DFA62858C95DA3E40102400 /* DotLifeDomain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D5423A89F583E87505681E0B /* DotLifePersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3DEEDB8780291AF1C47DA1 /* DotLifePersistenceTests.swift */; };
 		DCAAC2419724C456092244C7 /* DotLifeDomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3695CBE30DA7C0C6CE27360B /* DotLifeDomainTests.swift */; };
 		DF291F65674BAE73EE0D1F52 /* DotLifeUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 90A4C04670EB321E480710A4 /* DotLifeUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F8F73342AB796C5457D200B2 /* YearDayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545CDA8E5D8A7DDF0164E521 /* YearDayTests.swift */; };
@@ -72,14 +79,17 @@
 
 /* Begin PBXFileReference section */
 		029FDB517D0FDB1C7AEA59E3 /* TuistBundle+DotLifeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+DotLifeApp.swift"; sourceTree = "<group>"; };
+		056EC082088F3EEBDD771A6E /* DotLifeAppKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotLifeAppKitTests.swift; sourceTree = "<group>"; };
 		06630B71C84E64075752C7B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		076830AD941C7FFFBEB60F9E /* DotLifeShell.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeShell.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0F3DEEDB8780291AF1C47DA1 /* DotLifePersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotLifePersistenceTests.swift; sourceTree = "<group>"; };
 		16F1D9B365E1C796EB45FB22 /* DotLifeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DotLifeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E61A3EC781B1900FA83808B /* TimeBucketTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBucketTests.swift; sourceTree = "<group>"; };
 		2DFA62858C95DA3E40102400 /* DotLifeDomain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeDomain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3695CBE30DA7C0C6CE27360B /* DotLifeDomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotLifeDomainTests.swift; sourceTree = "<group>"; };
 		4AC4A6D2DDBE4DBDB8FB52B2 /* DotLifeDS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeDS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		545CDA8E5D8A7DDF0164E521 /* YearDayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearDayTests.swift; sourceTree = "<group>"; };
+		5A173B227A14D938DF8E6D87 /* DotLifeShellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotLifeShellTests.swift; sourceTree = "<group>"; };
 		5C3681A5895F25DDEB59A19D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6D161559F0908556A977A38B /* YearGridLayoutCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearGridLayoutCalculatorTests.swift; sourceTree = "<group>"; };
 		83620F0A5E7924CC7FA9023E /* DotLifeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotLifeUITests.swift; sourceTree = "<group>"; };
@@ -88,6 +98,7 @@
 		9DB326DC821D785B33147805 /* ExperienceRecordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceRecordTests.swift; sourceTree = "<group>"; };
 		B19D41D8A07B4B87A8FC5C9D /* DotLifeAppKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifeAppKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6DC70EB59E02F52D9469A17 /* TimeBucketingServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBucketingServiceTests.swift; sourceTree = "<group>"; };
+		D12CAC683C2D91F38B19B4C7 /* DirectionLockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionLockTests.swift; sourceTree = "<group>"; };
 		DF189EF1331D2D9511117968 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E0C40C12E3B05CBA40FC5147 /* TuistAssets+DotLifeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+DotLifeApp.swift"; sourceTree = "<group>"; };
 		EE7280C6AF64C726F799D348 /* DotLifePersistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DotLifePersistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,7 +112,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				976B188C413E82C587D1E8ED /* DotLifeAppKit.framework in Frameworks */,
 				4F1C341666321D3D6F124516 /* DotLifeDomain.framework in Frameworks */,
+				CE8FEF4987FA0AD717EB4D00 /* DotLifePersistence.framework in Frameworks */,
+				6FAAED3EA156150116AC96B6 /* DotLifeShell.framework in Frameworks */,
 				B03494CE1ECB48C3E9742BF0 /* DotLifeUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -125,6 +139,14 @@
 				E314D7329708F7C0AB410F5D /* Packages */,
 			);
 			name = Project;
+			sourceTree = "<group>";
+		};
+		05E527EEF5E67C5574A62C3B /* DotLifePersistence */ = {
+			isa = PBXGroup;
+			children = (
+				7FB9662BF13739C51ED74EA9 /* Tests */,
+			);
+			path = DotLifePersistence;
 			sourceTree = "<group>";
 		};
 		1FC00DBABCEFC92869E10708 /* DotLifeUITests */ = {
@@ -162,12 +184,53 @@
 			path = DotLifeApp;
 			sourceTree = "<group>";
 		};
+		49498D71DE3BB351096B2C01 /* DotLifeShellTests */ = {
+			isa = PBXGroup;
+			children = (
+				D12CAC683C2D91F38B19B4C7 /* DirectionLockTests.swift */,
+				5A173B227A14D938DF8E6D87 /* DotLifeShellTests.swift */,
+			);
+			path = DotLifeShellTests;
+			sourceTree = "<group>";
+		};
+		635B4BCC61ABE7D6CAC8655A /* DotLifeAppKit */ = {
+			isa = PBXGroup;
+			children = (
+				A4EA87CDCDE8209602D181B3 /* Tests */,
+			);
+			path = DotLifeAppKit;
+			sourceTree = "<group>";
+		};
 		673BF874F65FB26AD53F4607 /* DotLifeDomain */ = {
 			isa = PBXGroup;
 			children = (
 				993F8F443FAF733674496F98 /* Tests */,
 			);
 			path = DotLifeDomain;
+			sourceTree = "<group>";
+		};
+		7FB9662BF13739C51ED74EA9 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				C3B7E658A64611AD1DCC8364 /* DotLifePersistenceTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		83E43CEBBC186ADAF93BEC15 /* DotLifeShell */ = {
+			isa = PBXGroup;
+			children = (
+				AD2A68FE384D4F8A472E2E3F /* Tests */,
+			);
+			path = DotLifeShell;
+			sourceTree = "<group>";
+		};
+		88FC69D58C112B6F7F427EE0 /* DotLifeAppKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				056EC082088F3EEBDD771A6E /* DotLifeAppKitTests.swift */,
+			);
+			path = DotLifeAppKitTests;
 			sourceTree = "<group>";
 		};
 		993F8F443FAF733674496F98 /* Tests */ = {
@@ -206,6 +269,22 @@
 			path = DotLifeUI;
 			sourceTree = "<group>";
 		};
+		A4EA87CDCDE8209602D181B3 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				88FC69D58C112B6F7F427EE0 /* DotLifeAppKitTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		AD2A68FE384D4F8A472E2E3F /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				49498D71DE3BB351096B2C01 /* DotLifeShellTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
 		B3816484EBBD44F66C83876A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -231,6 +310,14 @@
 			path = InfoPlists;
 			sourceTree = "<group>";
 		};
+		C3B7E658A64611AD1DCC8364 /* DotLifePersistenceTests */ = {
+			isa = PBXGroup;
+			children = (
+				0F3DEEDB8780291AF1C47DA1 /* DotLifePersistenceTests.swift */,
+			);
+			path = DotLifePersistenceTests;
+			sourceTree = "<group>";
+		};
 		C661E4FAE0974CD6B0BCB7F4 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
@@ -251,7 +338,10 @@
 		E314D7329708F7C0AB410F5D /* Packages */ = {
 			isa = PBXGroup;
 			children = (
+				635B4BCC61ABE7D6CAC8655A /* DotLifeAppKit */,
 				673BF874F65FB26AD53F4607 /* DotLifeDomain */,
+				05E527EEF5E67C5574A62C3B /* DotLifePersistence */,
+				83E43CEBBC186ADAF93BEC15 /* DotLifeShell */,
 				A470C3669A1AAF9C94AAD371 /* DotLifeUI */,
 			);
 			path = Packages;
@@ -384,11 +474,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62C83BAC89E384DD07E036E2 /* DotLifeAppKitTests.swift in Sources */,
 				DCAAC2419724C456092244C7 /* DotLifeDomainTests.swift in Sources */,
 				04F92A183D74C2FB873F5DD2 /* ExperienceRecordTests.swift in Sources */,
 				2C62745D64DABF6C18DC0ADF /* TimeBucketTests.swift in Sources */,
 				9551B0F9B0420D15D8503390 /* TimeBucketingServiceTests.swift in Sources */,
 				F8F73342AB796C5457D200B2 /* YearDayTests.swift in Sources */,
+				D5423A89F583E87505681E0B /* DotLifePersistenceTests.swift in Sources */,
+				51B824AA0C7A83C40DA2820B /* DirectionLockTests.swift in Sources */,
+				5DB91AEFB6119D8D5D4A085A /* DotLifeShellTests.swift in Sources */,
 				3C1AB4A4262A8606FF5DA033 /* DotLifeUITests.swift in Sources */,
 				54F925296D8E0A6127C7BCCE /* ViewModelTests.swift in Sources */,
 				7982FC1DCBB33FBC30D0BF0B /* YearGridLayoutCalculatorTests.swift in Sources */,

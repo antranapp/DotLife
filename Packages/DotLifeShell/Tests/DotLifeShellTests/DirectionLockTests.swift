@@ -31,17 +31,20 @@ import DotLifeShell
     #expect(vertical.isScrollEnabled == true)
 }
 
-@Test func directionLockDefaultsToHorizontalWhenAmbiguous() {
+@Test func directionLockDoesNotLockWhenAmbiguous() {
     let horizontal = UIScrollView()
     let vertical = UIScrollView()
     let lock = DirectionLock(threshold: 10, ratioThreshold: 1.2)
     lock.register(horizontalScrollView: horizontal, verticalScrollView: vertical)
 
     lock.touchBegan(at: CGPoint(x: 0, y: 0))
+    // Diagonal movement - neither dx nor dy dominates by ratioThreshold
     let axis = lock.touchMoved(to: CGPoint(x: 12, y: 11))
 
-    #expect(axis == .horizontal)
-    #expect(vertical.isScrollEnabled == false)
+    // When ambiguous, don't lock - let both scroll views compete naturally
+    #expect(axis == nil)
+    #expect(horizontal.isScrollEnabled == true)
+    #expect(vertical.isScrollEnabled == true)
 }
 
 @Test func directionLockResetsOnTouchEnd() {
