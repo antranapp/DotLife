@@ -29,13 +29,19 @@ let project = Project(
             bundleId: "app.antran.dotlife.tests",
             deploymentTargets: .iOS("17.0"),
             sources: [
+                "Packages/DotLifeDomain/Tests/DotLifeDomainTests/**",
                 "Packages/DotLifeUI/Tests/DotLifeUITests/**",
-                "Packages/DotLifeDomain/Tests/DotLifeDomainTests/**"
+                "Packages/DotLifeShell/Tests/DotLifeShellTests/**",
+                "Packages/DotLifePersistence/Tests/DotLifePersistenceTests/**",
+                "Packages/DotLifeAppKit/Tests/DotLifeAppKitTests/**"
             ],
             dependencies: [
                 .target(name: "DotLifeApp"),
+                .external(name: "DotLifeDomain"),
                 .external(name: "DotLifeUI"),
-                .external(name: "DotLifeDomain")
+                .external(name: "DotLifeShell"),
+                .external(name: "DotLifePersistence"),
+                .external(name: "DotLifeAppKit")
             ]
         )
     ]

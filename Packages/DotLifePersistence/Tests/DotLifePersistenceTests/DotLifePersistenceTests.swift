@@ -6,7 +6,7 @@ import DotLifeDomain
 
 // MARK: - Module Tests
 
-@Test func moduleVersionExists() async throws {
+@Test func persistenceModuleVersionExists() async throws {
     #expect(DotLifePersistenceModule.version == "0.1.0")
 }
 

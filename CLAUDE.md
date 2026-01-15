@@ -33,6 +33,12 @@ Screen size: 402x874 (iPhone 17 Pro). Use center Y (~437) for horizontal swipes.
 | Swipe down (→ Today view) | `swipe x1:200 y1:200 x2:200 y2:600 duration:0.3` |
 | Verify state | `screenshot` |
 
+## Testing Guidelines
+
+- **Avoid `@testable import`**: Use regular `import` for modules where all tested types are already `public`. `@testable import` requires `ENABLE_TESTABILITY=YES` which may not be set in Xcode Cloud release/archive builds, causing "Module was not compiled for testing" errors.
+- All types in DotLifeDomain, DotLifeUI, DotLifeShell, DotLifePersistence, and DotLifeAppKit are public - use regular `import`.
+- Run `tuist test` locally before pushing to verify tests compile and pass.
+
 ## Plan mode
 
 -  Present the question in multiple choice style and enummarate the question and answer for easy answering
