@@ -44,5 +44,8 @@ let project = Project(
                 .external(name: "DotLifeAppKit")
             ]
         )
+    ],
+    additionalFiles: [
+        .folderReference(path: "ci_scripts")
     ]
 )
