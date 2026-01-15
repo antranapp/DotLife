@@ -17,6 +17,10 @@ Tuist/.build/
 Tuist/.tuist-cache/
 Tuist/.tuist-bin/
 
+# Tuist-generated Xcode projects (regenerate with `tuist generate`)
+*.xcodeproj
+*.xcworkspace
+
 # App artifacts
 *.ipa
 *.dSYM*
