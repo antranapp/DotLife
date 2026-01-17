@@ -1,11 +1,13 @@
-#
-//  ci_post_clone.sh
-//  DotLife
-//
-//  Created by An Tran on 15/1/26.
-//
+#!/bin/bash
+set -e
 
-#!/bin/sh
-brew install --formula tuist@4.104.6
+# Install mise (package manager for Tuist)
+curl https://mise.run | sh
+export PATH="$HOME/.local/bin:$PATH"
 
+# Install and activate Tuist
+mise install tuist
+eval "$(mise activate bash)"
+
+# Generate Xcode project
 tuist generate
