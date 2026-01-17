@@ -10,4 +10,5 @@ mise install tuist
 eval "$(mise activate bash)"
 
 # Generate Xcode project
+cd ../
 tuist generate
