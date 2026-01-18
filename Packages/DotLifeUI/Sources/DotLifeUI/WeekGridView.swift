@@ -27,7 +27,7 @@ public struct WeekGridView: View {
     }
 
     private var columns: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: 8), count: columnCount)
+        Array(repeating: GridItem(.flexible(), spacing: 16), count: columnCount)
     }
 
     /// Dot size based on zoom scale

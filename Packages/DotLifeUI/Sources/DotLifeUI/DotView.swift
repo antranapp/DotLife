@@ -34,13 +34,15 @@ public struct DotView: View {
         Button(action: onTap) {
             BaseDotView(
                 size: size,
-                fillColor: colors.dotBase,
+                fillColor: fillColor(colors: colors),
                 fillOpacity: fillOpacity,
                 ringColor: ringColor,
                 ringWidth: ringWidth,
-                glowColor: colors.dotBase,
+                glowColor: glowColor(colors: colors),
                 isAnimating: isCurrentMoment,
-                animationDuration: 2.0
+                animationDuration: DotStyling.breathingDuration,
+                breathingMinScale: 1.0,
+                breathingMaxScale: 1.0
             )
         }
         .buttonStyle(.plain)
@@ -48,35 +50,30 @@ public struct DotView: View {
         .accessibilityIdentifier(accessibilityIdentifierValue)
     }
 
-    // MARK: - Styling
+    // MARK: - Styling (uses centralized DotStyling configuration)
+
+    private func fillColor(colors: ThemeColors) -> Color {
+        DotStyling.fillColor(isCurrent: isCurrentMoment, colors: colors)
+    }
+
+    private func glowColor(colors: ThemeColors) -> Color {
+        DotStyling.glowColor(isCurrent: isCurrentMoment, colors: colors)
+    }
+
+    private var isFuture: Bool {
+        summary.bucket.start > Date()
+    }
 
     private var fillOpacity: Double {
-        if summary.hasMoments {
-            // Filled dot: opacity varies by count
-            if summary.count >= 3 {
-                return 1.0
-            } else if summary.count >= 2 {
-                return 0.9
-            } else {
-                return 0.85
-            }
-        } else {
-            // Empty dot: very soft background texture
-            return 0.1
-        }
+        DotStyling.opacity(isCurrent: isCurrentMoment, isFuture: isFuture)
     }
 
     private var ringColor: Color {
-        // Subtle ring for multi-experience buckets
-        if summary.count >= 2 {
-            return tokens.colors.dotBase.opacity(0.25)
-        } else {
-            return .clear
-        }
+        summary.count >= 2 ? tokens.colors.dotBase.opacity(DotStyling.ringOpacity) : .clear
     }
 
     private var ringWidth: CGFloat {
-        summary.count >= 2 ? 1.5 : 0
+        summary.count >= 2 ? DotStyling.ringWidth : 0
     }
 
     private var accessibilityLabel: String {

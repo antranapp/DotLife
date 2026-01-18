@@ -63,6 +63,7 @@ public struct BaseDotView: View {
                 .frame(width: size, height: size)
                 .scaleEffect(isAnimating ? (isBreathing ? breathingMaxScale : breathingMinScale) : 1.0)
         }
+        .frame(width: size, height: size) // Fixed frame ensures consistent grid spacing
         .onAppear {
             if isAnimating {
                 startBreathingAnimation()
