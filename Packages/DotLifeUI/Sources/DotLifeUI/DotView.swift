@@ -40,7 +40,7 @@ public struct DotView: View {
                 ringWidth: ringWidth,
                 glowColor: glowColor(colors: colors),
                 isAnimating: isCurrentMoment,
-                animationDuration: 2.0,
+                animationDuration: DotStyling.breathingDuration,
                 breathingMinScale: 1.0,
                 breathingMaxScale: 1.0
             )
@@ -50,66 +50,30 @@ public struct DotView: View {
         .accessibilityIdentifier(accessibilityIdentifierValue)
     }
 
-    // MARK: - Styling
+    // MARK: - Styling (uses centralized DotStyling configuration)
 
-    /// Determines the fill color based on current moment state.
-    /// - Current moment: accent color (brightest, with animation) - matches YearDotView today styling
-    /// - Other periods: dotBase color
     private func fillColor(colors: ThemeColors) -> Color {
-        if isCurrentMoment {
-            return colors.accent
-        } else {
-            return colors.dotBase
-        }
+        DotStyling.fillColor(isCurrent: isCurrentMoment, colors: colors)
     }
 
-    /// Determines the glow color for breathing animation.
-    /// - Current moment: accent color glow - matches YearDotView today styling
-    /// - Other periods: dotBase color glow
     private func glowColor(colors: ThemeColors) -> Color {
-        if isCurrentMoment {
-            return colors.accent
-        } else {
-            return colors.dotBase
-        }
+        DotStyling.glowColor(isCurrent: isCurrentMoment, colors: colors)
     }
 
-    /// Determines if this period is in the future.
     private var isFuture: Bool {
         summary.bucket.start > Date()
     }
 
-    /// Determines opacity based on period state.
-    /// Brightness hierarchy (brightest to faintest) - matches YearDotView:
-    /// 1. Current moment: 1.0 (brightest, with breathing animation)
-    /// 2. Past periods: 0.3 (uniform - same as yearly overview)
-    /// 3. Future periods: 0.1 (visible but subdued - same as yearly overview)
     private var fillOpacity: Double {
-        // Current moment is always brightest
-        if isCurrentMoment {
-            return 1.0
-        }
-
-        // Future periods are visible but subdued (matches YearDotView)
-        if isFuture {
-            return 0.1
-        }
-
-        // All past periods have the same opacity (matches YearDotView)
-        return 0.3
+        DotStyling.opacity(isCurrent: isCurrentMoment, isFuture: isFuture)
     }
 
     private var ringColor: Color {
-        // Subtle ring for multi-experience buckets
-        if summary.count >= 2 {
-            return tokens.colors.dotBase.opacity(0.25)
-        } else {
-            return .clear
-        }
+        summary.count >= 2 ? tokens.colors.dotBase.opacity(DotStyling.ringOpacity) : .clear
     }
 
     private var ringWidth: CGFloat {
-        summary.count >= 2 ? 1.5 : 0
+        summary.count >= 2 ? DotStyling.ringWidth : 0
     }
 
     private var accessibilityLabel: String {

@@ -30,11 +30,11 @@ public struct YearDotView: View {
                 fillOpacity: fillOpacity,
                 ringColor: .clear,
                 ringWidth: 0,
-                glowColor: colors.accent,
+                glowColor: DotStyling.glowColor(isCurrent: day.isToday, colors: colors),
                 isAnimating: day.isToday,
-                animationDuration: 2.0,   // Breathing animation cycle
-                breathingMinScale: 1.0,   // Dot stays fixed size
-                breathingMaxScale: 1.0    // Same as other dots (no size change)
+                animationDuration: DotStyling.breathingDuration,
+                breathingMinScale: 1.0,
+                breathingMaxScale: 1.0
             )
 
             // Show experience count for days with experiences
@@ -48,37 +48,14 @@ public struct YearDotView: View {
         .accessibilityLabel(accessibilityLabel)
     }
 
-    // MARK: - Styling
+    // MARK: - Styling (uses centralized DotStyling configuration)
 
-    /// Determines the fill color based on day state.
-    /// - Today: accent color (brightest, with animation)
-    /// - All other days: dotBase color (uniform appearance)
     private func fillColor(colors: ThemeColors) -> Color {
-        if day.isToday {
-            return colors.accent
-        } else {
-            return colors.dotBase
-        }
+        DotStyling.fillColor(isCurrent: day.isToday, colors: colors)
     }
 
-    /// Determines opacity based on day state.
-    /// Brightness hierarchy (brightest to faintest):
-    /// 1. Today: 1.0 (brightest, with breathing animation)
-    /// 2. Past days: 0.45 (uniform - experiences indicated by number only)
-    /// 3. Future days: 0.04 (very faint to avoid distraction)
     private var fillOpacity: Double {
-        // Today is always brightest
-        if day.isToday {
-            return 1.0
-        }
-
-        // Future days are very faint to avoid distraction
-        if day.isFuture {
-            return 0.04
-        }
-
-        // All past days have the same opacity (experiences shown by number)
-        return 0.3
+        DotStyling.opacity(isCurrent: day.isToday, isFuture: day.isFuture)
     }
 
     private var accessibilityLabel: String {
