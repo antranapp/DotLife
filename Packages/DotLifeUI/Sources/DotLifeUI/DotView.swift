@@ -34,13 +34,15 @@ public struct DotView: View {
         Button(action: onTap) {
             BaseDotView(
                 size: size,
-                fillColor: colors.dotBase,
+                fillColor: fillColor(colors: colors),
                 fillOpacity: fillOpacity,
                 ringColor: ringColor,
                 ringWidth: ringWidth,
-                glowColor: colors.dotBase,
+                glowColor: glowColor(colors: colors),
                 isAnimating: isCurrentMoment,
-                animationDuration: 2.0
+                animationDuration: 2.0,
+                breathingMinScale: 1.0,
+                breathingMaxScale: 1.0
             )
         }
         .buttonStyle(.plain)
@@ -50,20 +52,51 @@ public struct DotView: View {
 
     // MARK: - Styling
 
-    private var fillOpacity: Double {
-        if summary.hasMoments {
-            // Filled dot: opacity varies by count
-            if summary.count >= 3 {
-                return 1.0
-            } else if summary.count >= 2 {
-                return 0.9
-            } else {
-                return 0.85
-            }
+    /// Determines the fill color based on current moment state.
+    /// - Current moment: accent color (brightest, with animation) - matches YearDotView today styling
+    /// - Other periods: dotBase color
+    private func fillColor(colors: ThemeColors) -> Color {
+        if isCurrentMoment {
+            return colors.accent
         } else {
-            // Empty dot: very soft background texture
-            return 0.1
+            return colors.dotBase
         }
+    }
+
+    /// Determines the glow color for breathing animation.
+    /// - Current moment: accent color glow - matches YearDotView today styling
+    /// - Other periods: dotBase color glow
+    private func glowColor(colors: ThemeColors) -> Color {
+        if isCurrentMoment {
+            return colors.accent
+        } else {
+            return colors.dotBase
+        }
+    }
+
+    /// Determines if this period is in the future.
+    private var isFuture: Bool {
+        summary.bucket.start > Date()
+    }
+
+    /// Determines opacity based on period state.
+    /// Brightness hierarchy (brightest to faintest) - matches YearDotView:
+    /// 1. Current moment: 1.0 (brightest, with breathing animation)
+    /// 2. Past periods: 0.3 (uniform - same as yearly overview)
+    /// 3. Future periods: 0.04 (very faint to avoid distraction)
+    private var fillOpacity: Double {
+        // Current moment is always brightest
+        if isCurrentMoment {
+            return 1.0
+        }
+
+        // Future periods are very faint to avoid distraction
+        if isFuture {
+            return 0.04
+        }
+
+        // All past periods have the same opacity (matches YearDotView)
+        return 0.3
     }
 
     private var ringColor: Color {

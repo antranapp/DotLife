@@ -27,7 +27,7 @@ public struct TodayGridView: View {
     }
 
     private var columns: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: 8), count: columnCount)
+        Array(repeating: GridItem(.flexible(), spacing: 16), count: columnCount)
     }
 
     /// Dot size based on zoom scale
@@ -46,6 +46,15 @@ public struct TodayGridView: View {
         let spacing = tokens.spacing
 
         VStack(spacing: 20) {
+            // Hint at top
+            Text("Swipe down for This Week")
+                .font(typography.caption)
+                .foregroundStyle(colors.textSecondary.opacity(0.7))
+                .padding(.top, spacing.xl)
+                .accessibilityIdentifier("visualize.today.hint")
+
+            Spacer()
+
             // Header with scale indicator
             VStack(spacing: 4) {
                 Text(headerText)
@@ -58,7 +67,6 @@ public struct TodayGridView: View {
                     .foregroundStyle(colors.textSecondary.opacity(0.7))
                     .accessibilityIdentifier("visualize.today.scaleLabel")
             }
-            .padding(.top, spacing.xl)
 
             // Grid with zoom gesture
             if viewModel.todaySummaries.isEmpty {
@@ -81,13 +89,6 @@ public struct TodayGridView: View {
             }
 
             Spacer()
-
-            // Hint
-            Text("Swipe down for This Week")
-                .font(typography.caption)
-                .foregroundStyle(colors.textSecondary.opacity(0.7))
-                .padding(.bottom, spacing.xl)
-                .accessibilityIdentifier("visualize.today.hint")
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .foregroundStyle(colors.textPrimary)
