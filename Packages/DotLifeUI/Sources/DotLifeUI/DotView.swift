@@ -83,16 +83,16 @@ public struct DotView: View {
     /// Brightness hierarchy (brightest to faintest) - matches YearDotView:
     /// 1. Current moment: 1.0 (brightest, with breathing animation)
     /// 2. Past periods: 0.3 (uniform - same as yearly overview)
-    /// 3. Future periods: 0.04 (very faint to avoid distraction)
+    /// 3. Future periods: 0.1 (visible but subdued - same as yearly overview)
     private var fillOpacity: Double {
         // Current moment is always brightest
         if isCurrentMoment {
             return 1.0
         }
 
-        // Future periods are very faint to avoid distraction
+        // Future periods are visible but subdued (matches YearDotView)
         if isFuture {
-            return 0.04
+            return 0.1
         }
 
         // All past periods have the same opacity (matches YearDotView)
